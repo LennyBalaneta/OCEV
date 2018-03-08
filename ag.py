@@ -1,20 +1,18 @@
 import numpy as np
 
-#Bounds
-MINB = 0
-MAXB = 10
-
 class Individuo():
     def __init__(self, tam, cod):
+        self.min_bound = -10
+        self.max_bound = 10
         self.cromossomo = self.init_cromossomo(tam, cod)
     
     def init_cromossomo(self, tamCrom, cod):
         if cod == "BIN":
             return np.random.randint(2, size=tamCrom)
         elif cod == "INT":
-            return np.random.randint(MINB, MAXB, size=tamCrom)
+            return np.random.randint(self.min_bound, self.max_bound, size=tamCrom)
         elif cod == "REAL":
-            return np.random.uniform(MINB, MAXB, size=tamCrom)
+            return np.random.uniform(self.min_bound, self.max_bound, size=tamCrom)
         elif cod == "INT-PERM":
             return np.random.permutation(tamCrom)
         else:
@@ -33,7 +31,7 @@ class Populacao():
         return s
     
 def main():
-    pop = Populacao(5, 5, "INT-PERM")
+    pop = Populacao(5, 5, "REAL")
     print(pop)
     
 if __name__ == "__main__":
