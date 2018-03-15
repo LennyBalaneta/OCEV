@@ -1,10 +1,24 @@
 import numpy as np
-from Individuo import *
+import Individuo
+import IndividuoBin
+import IndividuoInt
+import IndividuoReal
+import IndividuoIntPerm
+
  
 
 class Populacao():
     def __init__(self, tamPop, tamCrom, cod, minB=-10, maxB=10):
-        self.individuos = [Individuo(tamCrom, cod, minB, maxB) for i in range(tamPop)]
+        if cod == "BIN":   
+            self.individuos = [IndividuoBin.IndividuoBin(tamCrom, minB, maxB) for i in range(tamPop)]
+        elif cod == "INT":
+            self.individuos = [IndividuoInt.IndividuoInt(tamCrom, minB, maxB) for i in range(tamPop)]
+        elif cod == "REAL":
+            self.individuos = [IndividuoReal.IndividuoReal(tamCrom, minB, maxB) for i in range(tamPop)]
+        elif cod == "INT-PERM":
+            self.individuos = [IndividuoIntPerm.IndividuoIntPerm(tamCrom, minB, maxB) for i in range(tamPop)]
+        else:
+            raise Exception("Codificacao invalida")
         self.tamCrom = tamCrom
  
     def popFitness(self):
