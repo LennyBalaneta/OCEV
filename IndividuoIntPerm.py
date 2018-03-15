@@ -12,4 +12,5 @@ class IndividuoIntPerm(Individuo):
         return np.random.RandomState().permutation(tamCrom)
         
     def fitness(self):
+        print("Funcao Fitness indefinida")
         return -1

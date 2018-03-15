@@ -12,4 +12,12 @@ class IndividuoInt(Individuo):
         return np.random.RandomState().randint(self.min_bound, self.max_bound, size=tamCrom)
         
     def fitness(self):
-        return -1
+        f = 0
+        for i in range(len(self.cromossomo)-1):
+            if self.cromossomo[i]%2 == 1:
+                if self.cromossomo[i+1]%2 == 0:
+                    f += 1
+            else:
+                if self.cromossomo[i+1]%2 == 1:
+                    f += 1
+        return f
