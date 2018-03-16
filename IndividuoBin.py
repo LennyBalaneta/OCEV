@@ -7,11 +7,11 @@ class IndividuoBin(Individuo):
         self.max_bound = maxB
         self.cod = "BIN"
         self.cromossomo = self.init_cromossomo(tam)
-    
+
     def init_cromossomo(self, tamCrom):
         return np.random.RandomState().randint(2, size=tamCrom)
-        
-    def fitness(self):
+
+    def fitnessOld(self):
         f = 0
         for i in range(len(self.cromossomo)-1):
             if self.cromossomo[i] == 1:
@@ -21,3 +21,15 @@ class IndividuoBin(Individuo):
                 if self.cromossomo[i+1] == 1:
                     f += 1
         return f
+
+    def fitness(self):
+        bitsPnum = 5
+        nVars = int(len(self.cromossomo)/bitsPnum)
+        #print("bitsPnum->", bitsPnum, " | nVars->", nVars)
+        for i in range(nVars):
+            self.cromDecode(self.cromossomo, bitsPnum*i, bitsPnum*(i+1))
+        return -1
+
+    def cromDecode(self, c, ini, fin):
+        print("CromPart: ", self.cromossomo[ini:fin])
+        #self.cromossomo[bitsPnum*i:bitsPnum*(i+1)]

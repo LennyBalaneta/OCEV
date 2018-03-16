@@ -5,11 +5,11 @@ import IndividuoInt
 import IndividuoReal
 import IndividuoIntPerm
 
- 
+
 
 class Populacao():
     def __init__(self, tamPop, tamCrom, cod, minB=-10, maxB=10):
-        if cod == "BIN":   
+        if cod == "BIN":
             self.individuos = [IndividuoBin.IndividuoBin(tamCrom, minB, maxB) for i in range(tamPop)]
         elif cod == "INT":
             self.individuos = [IndividuoInt.IndividuoInt(tamCrom, minB, maxB) for i in range(tamPop)]
@@ -20,13 +20,15 @@ class Populacao():
         else:
             raise Exception("Codificacao invalida")
         self.tamCrom = tamCrom
- 
+        self.maxDiv = None
+
     def popFitness(self):
         s = "Individuos->Fitness:\n"
         for i in self.individuos:
             s += str(i) + " -> " + str(i.fitness()) +"\n"
         return s
- 
+
+
     def centroid(self):
         cent = []
         for i in range(self.tamCrom):#n dimensões
@@ -35,32 +37,36 @@ class Populacao():
                 s += self.individuos[j].cromossomo[i]
             cent += [s/len(self.individuos)]
         return cent
- 
-    def inertia(self):
+
+    def diversidade(self):
         c = self.centroid()
         i = 0
         for i in range(len(self.individuos)):
             iC = 0
-            maioriC = 0
             for j in range(len(self.individuos[i].cromossomo)):
                 iC += (self.individuos[i].cromossomo[j] - c[j]) ** 2
-                #print(self.individuos[i].cromossomo[j])
-            if iC > maioriC:
-                maioriC = iC
             i += iC
- 
-        return i/maioriC
- 
+
+        return i
+
+    def diversidadeN(self):
+        d = self.diversidade()
+        if self.maxDiv:
+            return d/self.maxDiv
+        else:
+            self.maxDiv = d
+            return 1
+
     def __str__(self):
         s = "Individuos:\n"
         for i in self.individuos:
             s += str(i) + "\n"
         return s
- 
+
 def main():
     pop = Populacao(5, 5, "REAL")
     print(pop)
- 
+
 if __name__ == "__main__":
     main()
 #mersennetwister
