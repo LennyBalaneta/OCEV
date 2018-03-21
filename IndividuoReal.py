@@ -24,7 +24,7 @@ class IndividuoReal(Individuo):
             var1 -> [0:13]
             var2 -> [13:26]
             '''
-            vars = [self.cromDecode(self.cromossomo, 0, 13), self.cromDecode(self.cromossomo, 13, 26)]
+            vars = [self.ajuste(self.cromDecode(self.cromossomo, 0, 13)), self.ajuste(self.cromDecode(self.cromossomo, 13, 26))]
             return self.ackleyFunc(vars)
         
     def cromDecode(self, c, ini, fin):
@@ -32,9 +32,7 @@ class IndividuoReal(Individuo):
         numStr = ""
         for n in numTotal:
             numStr += str(n)
-        print("Numero original em binario: ", numStr)
-        print("Numero inteiro antes do ajuste: ", int(numStr, 2))
-        return self.ajuste(int(numStr, 2))
+        return int(numStr, 2)
 
     def ajuste(self, num):
         '''
@@ -55,3 +53,22 @@ class IndividuoReal(Individuo):
             second_sum += math.cos(2.0 * math.pi * vars[v])
         n = float(len(vars))
         return -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
+        
+        
+ '''
+    #funcao 12 maximos locais
+    #arrrumar a quantidade de bits -> 16
+    def fitness2(self):
+        x = self.ajuste2(self.cromDecode(self.cromossomo, 0, 16))
+        return math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4)
+        
+    def ajuste2(self, num):
+        
+        #numero recebido -> [0, 65536]
+        #bounds desejados -> [-2.0000, 2.0000]
+        n = num/10000
+        n -= 2
+        if n > 2:
+            n = 2
+        return n
+ '''
