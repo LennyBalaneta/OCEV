@@ -1,4 +1,5 @@
 import numpy as np
+import random
 import Individuo
 import IndividuoBin
 import IndividuoInt
@@ -56,6 +57,42 @@ class Populacao():
         else:
             self.maxDiv = d
             return 1
+    
+    def totalFitness(self):
+        totF = 0
+        for i in self.individuos:
+            totF += i.fitness()
+        return totF
+    
+    def selecaoRoleta(self):
+        #Somatorio de fitness
+        totF = self.totalFitness()
+
+        #chance de cada individuo de ser escolhido
+        chances = []
+        for i in self.individuos:
+            chances += [i.fitness()/totF] 
+        
+        #escolha dos individuos
+        selecionados = []
+        for i in range(int((len(self.individuos)/2))):#cada iteracao seleciona 2
+            #escolhe o individuo de acordo com o numero gerado aleatoriamente
+            n = np.random.choice(list(range(len(self.individuos))), p=chances)
+            selecionados += [self.individuos[n]]
+            cN = chances[n]
+            for ch in range(len(chances)):
+                chances[ch] += cN/(len(chances)-1)
+            chances[n] = 0.0
+            n2 = np.random.choice(list(range(len(self.individuos))), p=chances)
+            selecionados += [self.individuos[n2]]
+            selecionados += [self.individuos[n2]]
+            for ch in range(len(chances)):
+                chances[ch] -= cN/(len(chances)-1)
+            chances[n] = cN
+        
+        print("Total fitness: ", totF)
+        print("Chances: ", chances)
+        return selecionados
 
     def __str__(self):
         s = "Individuos:\n"
