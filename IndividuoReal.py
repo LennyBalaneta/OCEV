@@ -34,16 +34,17 @@ class IndividuoReal(Individuo):
             numStr += str(n)
         return int(numStr, 2)
 
+        
     def ajuste(self, num):
         '''
         numero recebido -> [0, 8191]
         bounds desejados -> [-32.00, 32.00]
         '''
-        n = num/100
-        n -= 32
-        if n > 32:
-            n = 32
-        return n
+        l = 13
+        x_min = -32.0
+        x_max = 32.0
+        x = x_min + ((x_max - x_min)/(2**l-1)) *  num
+        return x
 
     def ackleyFunc(self, vars):
         first_sum = 0.0
@@ -55,7 +56,7 @@ class IndividuoReal(Individuo):
         return -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
         
         
- '''
+'''
     #funcao 12 maximos locais
     #arrrumar a quantidade de bits -> 16
     def fitness2(self):
@@ -71,4 +72,4 @@ class IndividuoReal(Individuo):
         if n > 2:
             n = 2
         return n
- '''
+'''
