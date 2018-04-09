@@ -41,10 +41,10 @@ class IndividuoBin(Individuo):
         #Define os pontos de corte
         ptoC1 = np.random.randint(0, len(self.cromossomo)-1)
         ptoC2 = np.random.randint(ptoC1+1, len(self.cromossomo))
-        print("Cromossomo 1: ", self.cromossomo)
-        print("Cromossomo 2: ", ib2.cromossomo)
-        print("Ponto de corte 1: ", ptoC1)
-        print("Ponto de corte 2: ", ptoC2)
+        #print("Cromossomo 1: ", self.cromossomo)
+        #print("Cromossomo 2: ", ib2.cromossomo)
+        #print("Ponto de corte 1: ", ptoC1)
+        #print("Ponto de corte 2: ", ptoC2)
  
         #gera os 2 individuos resultantes do crossover
         crom1 = np.concatenate((self.cromossomo[:ptoC1], ib2.cromossomo[ptoC1:ptoC2], self.cromossomo[ptoC2:]))
@@ -56,27 +56,36 @@ class IndividuoBin(Individuo):
  
     def crossoverUnif(self, ib2):
         #Define os pontos de corte
-        print("Cromossomo 1: ", self.cromossomo)
-        print("Cromossomo 2: ", ib2.cromossomo)
+        #print("Cromossomo 1: ", self.cromossomo)
+        #print("Cromossomo 2: ", ib2.cromossomo)
  
         #gera os 2 individuos resultantes do crossover
         #inicializa o array com o primeiro elemento
         if np.random.random() < 0.5:
-            crom1 = self.cromossomo[0]
-            crom2 = ib2.cromossomo[0]
+            crom1 = np.array((self.cromossomo[0]))
+            crom2 = np.array((ib2.cromossomo[0]))
         else:
-            print("Flip em 0")
-            crom1 = ib2.cromossomo[0]
-            crom2 = self.cromossomo[0]
+            #print("Flip em 0")
+            crom1 = np.array((ib2.cromossomo[0]))
+            crom2 = np.array((self.cromossomo[0]))
  
         #percorre o resto do array verificando se ocorre o flip ou nao
         for i in range(1, len(self.cromossomo)):
             if np.random.random() < 0.5:
-                crom1 = np.concatenate((crom1, self.cromossomo[i]));
-                crom2 = np.concatenate((crom2, ib2.cromossomo[i]));
+                crom1 = np.append(crom1, self.cromossomo[i]);
+                crom2 = np.append(crom2, ib2.cromossomo[i]);
             else:
-                print("Flip em ", i)
-                crom1 = np.concatenate((crom1, ib2.cromossomo[i]));
-                crom2 = np.concatenate((crom2, self.cromossomo[i]));
+                #print("Flip em ", i)
+                crom1 = np.append(crom1, ib2.cromossomo[i]);
+                crom2 = np.append(crom2, self.cromossomo[i]);
         #retorna uma lista com os 2 individuos gerados
         return [crom1, crom2]
+        
+    def mutacao(self):
+        for i in range(len(self.cromossomo)):
+            if np.random.random() < 0.5:
+                print("Flip em ", i)
+                if self.cromossomo[i] == 0:
+                    self.cromossomo[i] = 1
+                else:
+                    self.cromossomo[i] = 0
