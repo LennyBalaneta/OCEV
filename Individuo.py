@@ -13,6 +13,14 @@ class Individuo(ABC):
     @abstractmethod
     def fitness(self):
         pass
+        
+    @abstractmethod
+    def crossover(self, i2, tipo):
+        pass
+        
+    @abstractmethod
+    def mutacao(self, tx, tipo):
+        pass
     
     def __str__(self):
         return np.array2string(self.cromossomo)

@@ -10,7 +10,15 @@ class IndividuoInt(Individuo):
     
     def init_cromossomo(self, tamCrom):
         return np.random.RandomState().randint(self.min_bound, self.max_bound, size=tamCrom)
+    
+    def crossover(self, i2, tipo):
+        print("Crossover indefinido")
+        return -1
         
+    def mutacao(self, tx, tipo):
+        print("Mutacao indefinida")
+        return -1
+    
     def fitness(self):
         f = 0
         for i in range(len(self.cromossomo)-1):

@@ -34,6 +34,13 @@ class IndividuoReal(Individuo):
             numStr += str(n)
         return int(numStr, 2)
 
+    def crossover(self, i2, tipo):
+        print("Crossover indefinido")
+        return -1
+        
+    def mutacao(self, tx, tipo):
+        print("Mutacao indefinida")
+        return -1
         
     def ajuste(self, num):
         '''

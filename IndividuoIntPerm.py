@@ -14,3 +14,11 @@ class IndividuoIntPerm(Individuo):
     def fitness(self):
         print("Funcao Fitness indefinida")
         return -1
+        
+    def crossover(self, i2, tipo):
+        print("Crossover indefinido")
+        return -1
+        
+    def mutacao(self, tx, tipo):
+        print("Mutacao indefinida")
+        return -1
