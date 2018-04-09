@@ -5,6 +5,7 @@ import IndividuoBin
 import IndividuoInt
 import IndividuoReal
 import IndividuoIntPerm
+import matplotlib.pyplot as plt
 
 
 
@@ -102,11 +103,12 @@ class Populacao():
         return popInt
     
     def loopEvolucao(self):
+        melhorF = 0
         melhoresInd = []
         melhoresIndF = []
         mediasIndF = []
         for gen in range(self.maxGeracoes):
-            print("---Geracao", gen, "---")
+            print("---Geracao", gen, "---", "Melhor fitness: ", melhorF)
             #print(self.popFitness())
             
             #print("Selecao:")
@@ -146,8 +148,23 @@ class Populacao():
             #print("Populacao final da geracao")
             #print(self.popFitness())
             #print("----------------")
-        return {"melhoresInd":melhoresInd, "melhoresIndF":melhoresIndF, "mediasIndF":mediasIndF}
+        return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF}
     
+    def geraGraficos(self, result):    
+        #criacao dos graficos
+        fig, ax = plt.subplots(2, 1)
+        #grafico do maior
+        ax[0].set_xlabel("Geração")
+        ax[0].set_ylabel("Maior fitness")
+        ax[0].plot(result["bF"])
+        
+        #grafico da media
+        ax[1].set_xlabel("Geração")
+        ax[1].set_ylabel("Média de fitness")
+        ax[1].plot(result["mF"])
+        
+        plt.tight_layout()
+        plt.show()
     
     def __str__(self):
         s = "Individuos:\n"
