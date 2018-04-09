@@ -6,11 +6,12 @@ import IndividuoInt
 import IndividuoReal
 import IndividuoIntPerm
 import matplotlib.pyplot as plt
+import copy
 
 
 
 class Populacao():
-    def __init__(self, tamPop, tamCrom, cod, minB=-10, maxB=10):
+    def __init__(self, tamPop, tamCrom, cod, minB=-10, maxB=10, elit=True):
         if cod == "BIN":
             self.individuos = [IndividuoBin.IndividuoBin(tamCrom, minB, maxB) for i in range(tamPop)]
         elif cod == "INT":
@@ -23,7 +24,8 @@ class Populacao():
             raise Exception("Codificacao invalida")
         self.tamCrom = tamCrom
         self.maxDiv = None
-        self.maxGeracoes = 100
+        self.maxGeracoes = 2000
+        self.elit = elit
 
     def popFitness(self):
         s = "Individuos->Fitness:\n"
@@ -103,12 +105,24 @@ class Populacao():
         return popInt
     
     def loopEvolucao(self):
+        #TODO calcular o fitness apenas uma vez por geracao
         melhorF = 0
         melhoresInd = []
         melhoresIndF = []
         mediasIndF = []
         for gen in range(self.maxGeracoes):
-            print("---Geracao", gen, "---", "Melhor fitness: ", melhorF)
+            if gen%10 == 0:
+                print("---Geracao", gen, "---", "Melhor fitness: ", melhorF)
+            
+            #melhor individuo para elitismo
+            eliteF = -1.0
+            eliteInd = None
+            if self.elit:
+                for i in self.individuos:
+                    f = i.fitness()
+                    if f > eliteF:
+                        eliteF = f
+                        eliteInd = copy.deepcopy(i)
             #print(self.popFitness())
             
             #print("Selecao:")
@@ -131,6 +145,18 @@ class Populacao():
             for i in self.individuos:
                 i.mutacao()
             
+            #elitismo
+            if self.elit:
+                piorInd = 0
+                piorF = self.individuos[0].fitness()
+                for i in range(len(self.individuos)):
+                    f = self.individuos[i].fitness()
+                    if f < piorF:
+                        piorF = f
+                        piorInd = i
+                self.individuos[piorInd] = eliteInd
+            
+            
             #calculo do melhor e media por geracao
             melhorF = -1
             melhor = None
@@ -148,6 +174,8 @@ class Populacao():
             #print("Populacao final da geracao")
             #print(self.popFitness())
             #print("----------------")
+            if melhorF == self.tamCrom-1:#parar se achar a solucao otima
+                break
         return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF}
     
     def geraGraficos(self, result):    
@@ -155,12 +183,14 @@ class Populacao():
         fig, ax = plt.subplots(2, 1)
         #grafico do maior
         ax[0].set_xlabel("Geração")
-        ax[0].set_ylabel("Maior fitness")
+        ax[0].set_ylabel("Fitness")
+        ax[0].set_title("Maior fitness por geração")
         ax[0].plot(result["bF"])
         
         #grafico da media
         ax[1].set_xlabel("Geração")
-        ax[1].set_ylabel("Média de fitness")
+        ax[1].set_ylabel("Fitness")
+        ax[1].set_title("Média de fitness por geração")
         ax[1].plot(result["mF"])
         
         plt.tight_layout()
