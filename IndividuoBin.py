@@ -7,6 +7,7 @@ class IndividuoBin(Individuo):
         self.min_bound = minB
         self.max_bound = maxB
         self.cod = "BIN"
+        self.txMut = 0.05#taxa de mutacao
         self.cromossomo = self.init_cromossomo(tam)
  
     def init_cromossomo(self, tamCrom):
@@ -82,9 +83,10 @@ class IndividuoBin(Individuo):
         return [crom1, crom2]
         
     def mutacao(self):
+        #para cada elemento do cromossomo da bitflip com um chance de txMut
         for i in range(len(self.cromossomo)):
-            if np.random.random() < 0.5:
-                print("Flip em ", i)
+            if np.random.random() < self.txMut:
+                #print("Flip em ", i)
                 if self.cromossomo[i] == 0:
                     self.cromossomo[i] = 1
                 else:

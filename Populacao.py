@@ -71,24 +71,22 @@ class Populacao():
         #chance de cada individuo de ser escolhido
         chances = []
         for i in self.individuos:
-            chances += [i.fitness()/totF] 
+            chances += [i.fitness()/totF]
         
         #escolha dos individuos
         selecionados = []
-        for i in range(int((len(self.individuos)/2))):#cada iteracao seleciona 2
+        for i in range(int(len(self.individuos)/2)):#cada iteracao seleciona 2
             #escolhe o individuo de acordo com o numero gerado aleatoriamente
             n = np.random.choice(list(range(len(self.individuos))), p=chances)
             selecionados += [self.individuos[n]]
-            cN = chances[n]
-            for ch in range(len(chances)):
-                chances[ch] += cN/(len(chances)-1)
-            chances[n] = 0.0
-            n2 = np.random.choice(list(range(len(self.individuos))), p=chances)
+            
+            #recalcula a roleta
+            chances2 = []
+            for i in self.individuos:
+                chances2 += [i.fitness()/(totF-self.individuos[n].fitness())]
+            chances2[n] = 0.0
+            n2 = np.random.choice(list(range(len(self.individuos))), p=chances2)
             selecionados += [self.individuos[n2]]
-            selecionados += [self.individuos[n2]]
-            for ch in range(len(chances)):
-                chances[ch] -= cN/(len(chances)-1)
-            chances[n] = cN
         
         print("Total fitness: ", totF)
         print("Chances: ", chances)
