@@ -22,6 +22,7 @@ class Populacao():
             raise Exception("Codificacao invalida")
         self.tamCrom = tamCrom
         self.maxDiv = None
+        self.maxGeracoes = 10
 
     def popFitness(self):
         s = "Individuos->Fitness:\n"
@@ -88,10 +89,35 @@ class Populacao():
             n2 = np.random.choice(list(range(len(self.individuos))), p=chances2)
             selecionados += [self.individuos[n2]]
         
-        print("Total fitness: ", totF)
-        print("Chances: ", chances)
+        #print("Total fitness: ", totF)
+        #print("Chances: ", chances)
         return selecionados
-
+        
+    def recombinacao(self, individuos):
+        popInt = []
+        for i in range(int(len(self.individuos)/2)):
+            inds = individuos[i*2].crossover1pto(individuos[i*2+1])
+            popInt += [inds[0]]
+            popInt += [inds[1]]
+        return popInt
+    
+    def loopEvolucao(self):
+        for gen in range(self.maxGeracoes):
+            print("---Geracao", gen, "---")
+            print(self.popFitness())
+            
+            print("Selecao:")
+            #selecao dos individuos
+            sel = self.selecaoRoleta()
+            for s in sel:
+                print(s)
+            print("Recombinacao:")
+            #criacao da populacao intermediaria
+            popInterm = self.recombinacao(sel)
+            for s in popInterm:
+                print(s)
+            print("----------------")
+    
     def __str__(self):
         s = "Individuos:\n"
         for i in self.individuos:
@@ -99,7 +125,7 @@ class Populacao():
         return s
 
 def main():
-    pop = Populacao(5, 5, "REAL")
+    pop = Populacao(5, 5, "BIN")
     print(pop)
 
 if __name__ == "__main__":
