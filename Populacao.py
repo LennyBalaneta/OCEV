@@ -22,7 +22,7 @@ class Populacao():
             raise Exception("Codificacao invalida")
         self.tamCrom = tamCrom
         self.maxDiv = None
-        self.maxGeracoes = 10
+        self.maxGeracoes = 100
 
     def popFitness(self):
         s = "Individuos->Fitness:\n"
@@ -111,11 +111,24 @@ class Populacao():
             sel = self.selecaoRoleta()
             for s in sel:
                 print(s)
+            
             print("Recombinacao:")
             #criacao da populacao intermediaria
             popInterm = self.recombinacao(sel)
             for s in popInterm:
                 print(s)
+            
+            #substituia a populacao
+            for i in range(len(popInterm)):
+                self.individuos[i].cromossomo = popInterm[i]
+                
+            #mutacao
+            for i in self.individuos:
+                i.mutacao()
+            
+            #print ao final da geracao
+            print("Populacao final da geracao")
+            print(self.popFitness())
             print("----------------")
     
     def __str__(self):
