@@ -102,21 +102,24 @@ class Populacao():
         return popInt
     
     def loopEvolucao(self):
+        melhoresInd = []
+        melhoresIndF = []
+        mediasIndF = []
         for gen in range(self.maxGeracoes):
             print("---Geracao", gen, "---")
-            print(self.popFitness())
+            #print(self.popFitness())
             
-            print("Selecao:")
+            #print("Selecao:")
             #selecao dos individuos
             sel = self.selecaoRoleta()
-            for s in sel:
-                print(s)
+            #for s in sel:
+            #    print(s)
             
-            print("Recombinacao:")
+            #print("Recombinacao:")
             #criacao da populacao intermediaria
             popInterm = self.recombinacao(sel)
-            for s in popInterm:
-                print(s)
+            #for s in popInterm:
+            #    print(s)
             
             #substituia a populacao
             for i in range(len(popInterm)):
@@ -126,10 +129,25 @@ class Populacao():
             for i in self.individuos:
                 i.mutacao()
             
+            #calculo do melhor e media por geracao
+            melhorF = -1
+            melhor = None
+            soma = 0
+            for i in self.individuos:
+                fit = i.fitness()
+                soma += fit
+                if fit > melhorF:
+                    melhorF = fit
+                    melhor = i.cromossomo
+            melhoresInd += [melhor]
+            melhoresIndF += [melhorF]
+            mediasIndF += [soma/len(self.individuos)]
             #print ao final da geracao
-            print("Populacao final da geracao")
-            print(self.popFitness())
-            print("----------------")
+            #print("Populacao final da geracao")
+            #print(self.popFitness())
+            #print("----------------")
+        return {"melhoresInd":melhoresInd, "melhoresIndF":melhoresIndF, "mediasIndF":mediasIndF}
+    
     
     def __str__(self):
         s = "Individuos:\n"
