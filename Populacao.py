@@ -130,11 +130,13 @@ class Populacao():
         melhoresInd = []
         melhoresIndF = []
         mediasIndF = []
+        diver = []
         for gen in range(self.maxGeracoes):
             if gen%10 == 0:
                 print("---Geracao", gen, "---", "Melhor fitness: ", melhorF)
             
             #melhor individuo para elitismo
+            diver += [self.diversidadeN()]
             eliteF = -1.0
             eliteInd = None
             if self.elit:
@@ -196,7 +198,7 @@ class Populacao():
             #print("----------------")
             if melhorF == self.tamCrom-1:#parar se achar a solucao otima
                 break
-        return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF}
+        return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF, "diver":diver}
     
     def geraGraficos(self, result):    
         #criacao dos graficos
@@ -204,14 +206,16 @@ class Populacao():
         #grafico do maior
         ax[0].set_xlabel("Geração")
         ax[0].set_ylabel("Fitness")
-        ax[0].set_title("Maior fitness por geração")
-        ax[0].plot(result["bF"])
+        ax[0].set_title("Fitness por geração")
+        ax[0].plot(result["bF"], label="Melhor", lw=1)
+        ax[0].plot(result["mF"], label="Media", lw=1)
+        ax[0].legend(loc="upper left")
         
         #grafico da media
         ax[1].set_xlabel("Geração")
-        ax[1].set_ylabel("Fitness")
-        ax[1].set_title("Média de fitness por geração")
-        ax[1].plot(result["mF"])
+        ax[1].set_ylabel("Diversidade")
+        ax[1].set_title("Diversidade por geração")
+        ax[1].plot(result["diver"], lw=1)
         
         plt.tight_layout()
         plt.show()
