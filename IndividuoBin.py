@@ -9,13 +9,11 @@ class IndividuoBin(Individuo):
         self.cod = "BIN"
         self.cromossomo = self.init_cromossomo(tam)
         self.fit = None
-        self.bla = 0
- 
+        
     def init_cromossomo(self, tamCrom):
         return np.random.RandomState().randint(2, size=tamCrom)
  
     def fitness(self):
-        self.bla += 1
         f = 0
         for i in range(len(self.cromossomo)-1):
             if self.cromossomo[i] == 1:

@@ -150,115 +150,88 @@ class Populacao():
     def calculaFitness(self):
         for i in self.individuos:
             i.fit = i.fitness()
- 
+        piorInd = melhorInd = 0
+        melhorF = self.individuos[melhorInd].fit
+        piorF = self.individuos[piorInd].fit
+        
+        for i in range(1, len(self.individuos)):
+            if self.individuos[i].fit > melhorF:
+                melhorInd = i
+                melhorF = self.individuos[i].fit
+            if self.individuos[i].fit < piorF:
+                piorInd = i
+                piorF = self.individuos[i].fit          
+        return  piorInd, melhorInd
+        
+    def mediaDaGeracao(self):
+        soma = 0.0
+        for i in self.individuos:
+            soma += i.fit
+        return soma/len(self.individuos)
  
  
     def loopEvolucao(self):
-        #TODO calcular o fitness apenas uma vez por geracao
-        melhorF = 0
         melhoresInd = []#melhores individuos por geracao
         melhoresIndF = []#melhores fitness por geracao
         mediasIndF = []#media de fitness por geracao
         diver = []#diversidade
         ger = 0#n da geracao
-        elite = None
-        while True:
+        vOtimo = range(len(self.individuos))#valor otimo da funcao(TODO tirar essa informacao daqui)
+        
+        #calcula o fitness da populacao inicial
+        piorInd, melhorInd = self.calculaFitness()
+        
+        #guarda o melhor individuo ate entao
+        melhorGeral = copy.deepcopy(self.individuos[melhorInd])#melhor individuo encontrado ate o momento
+        
+        #guarda estatisticas da populacao inicial
+        diver += [self.diversidadeN()]
+        melhoresInd += [self.individuos[melhorInd].cromossomo]
+        melhoresIndF += [self.individuos[melhorInd].fit]
+        mediasIndF += [self.mediaDaGeracao()]
+        
+        
+        #loop principal
+        while ger < self.maxGeracoes and self.individuos[melhorInd].fit != vOtimo:
             ger += 1
-            #calcula o fitness de todos os individuos
-            self.calculaFitness()
- 
-            #calcula diversidade
-            diver += [self.diversidadeN()]
- 
-            #calculo do pior, melhor e media por geracao
-            piorInd, piorF = self.piorDaGeracao()
- 
-            #elitismo
-            if self.elit == True and elite:
-                self.individuos[piorInd] = elite
-            melhorInd, melhorF = self.melhorDaGeracao()
-            if elit == True:
-                elite = copy.deepcopy(self.individuos[melhorInd])
-            if self.individuos[melhorInd].fit > melhorGeral.fit:
-                melhorGeral = copy.deepcopy(self.individuos[melhorInd])
- 
-            mediaF = self.mediaDaGeracao()
- 
-            melhoresInd += [melhorInd.cromossomo]
-            melhoresIndF += [melhorF]
-            mediasIndF += [mediaF]
-            '''
-            melhorF = self.individuos[0].fit#fitness do melhor individuo da geracao
-            melhor = self.individuos[0]#indice do melhor individuo da geracao
-            piorF = self.individuos[0].fit#fitness do pior individuo da geracao
-            pior = self.individuos[0]# indice do pior individuo da geracao
-            soma = 0
- 
-            #encontra o fitness e o indice do melhor e do pior individuos da geracao
-            for i in range(len(self.individuos)):
-                fit = self.individuos[i].fit
-                soma += fit
-                if fit > melhorF:
-                    melhorF = fit
-                    melhor = i
-                if fit < piorF:
-                    piorF = fit
-                    pior = i
-            '''
  
             #print
             if ger%10 == 0:
-                print("---Geracao", gen, "---", "Melhor fitness: ", melhorF)
+                print("---Geracao", ger, "---", "Melhor fitness: ", melhorGeral.fit)
  
-            #criterio de parada
-            if ger == self.maxGeracoes:
-                break
-            '''
-            #melhor individuo para elitismo
-            eliteF = -1.0
-            eliteInd = None
-            if self.elit:
-                for i in self.individuos:
-                    f = i.fitness()
-                    if f > eliteF:
-                        eliteF = f
-                        eliteInd = copy.deepcopy(i)
-            #print(self.popFitness())
-            '''
-            #print("Selecao:")
-            #selecao dos individuos
+            #selecao
             sel = self.selecao()
-            #for s in sel:
-            #    print(s)
- 
-            #print("Recombinacao:")
+
             #criacao da populacao intermediaria
             popInterm = self.recombinacao(sel)
-            #for s in popInterm:
-            #    print(s)
- 
+
             #substituia a populacao
             for i in range(len(popInterm)):
                 self.individuos[i].cromossomo = popInterm[i]
- 
+            
             #mutacao
             for i in self.individuos:
                 i.mutacao(self.txMut, self.tipoMutacao)
-            '''
+            
+            #calcula fitness da geracao
+            piorInd, melhorInd = self.calculaFitness()
+            
             #elitismo
-            if self.elit:
-                piorInd = 0
-                piorF = self.individuos[0].fitness()
-                for i in range(len(self.individuos)):
-                    f = self.individuos[i].fitness()
-                    if f < piorF:
-                        piorF = f
-                        piorInd = i
-                self.individuos[piorInd] = eliteInd
-            '''
- 
+            if self.elit == True:
+                self.individuos[piorInd] = copy.deepcopy(melhorGeral)
+            
+            #verifica se tem um melhor geral
+            if self.individuos[melhorInd].fit > melhorGeral.fit:
+                melhorGeral = copy.deepcopy(self.individuos[melhorInd])
+                
+            #guarda estatisticas da populacao
+            diver += [self.diversidadeN()]
+            melhoresInd += [melhorGeral.cromossomo]
+            melhoresIndF += [melhorGeral.fit]
+            mediasIndF += [self.mediaDaGeracao()]
+            
         #TODO retornar melhor individuo geral e seu fitness
-        return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF, "diver":diver}
+        return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF, "diver":diver, "bGeral":melhorGeral}
  
     def geraGraficos(self, result):
         #criacao dos graficos
