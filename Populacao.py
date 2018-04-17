@@ -35,7 +35,7 @@ class Populacao():
         self.tamPop = tamPop
         self.tipoCod = problema["codificacao"]
         self.tamCrom = problema["tamCrom"]
-        self.maxDiv = None
+        self.maxDiv = -1.0
         self.maxGeracoes = 2000
         self.elit = True
         self.tamTorneio = 3
@@ -48,36 +48,15 @@ class Populacao():
         for i in self.individuos:
             s += str(i) + " -> " + str(i.fitness()) +"\n"
         return s
- 
- 
-    def centroid(self):
-        cent = []
-        for i in range(self.tamCrom):#n dimensões
-            s = 0
-            for j in range(len(self.individuos)):
-                s += self.individuos[j].cromossomo[i]
-            cent += [s/len(self.individuos)]
-        return cent
- 
+            
     def diversidade(self):
-        c = self.centroid()
-        i = 0
-        for i in range(len(self.individuos)):
-            iC = 0
-            for j in range(len(self.individuos[i].cromossomo)):
-                iC += (self.individuos[i].cromossomo[j] - c[j]) ** 2
-            i += iC
- 
-        return i
- 
-    def diversidadeN(self):
-        d = self.diversidade()
-        if self.maxDiv:
-            return d/self.maxDiv
-        else:
-            self.maxDiv = d
-            return 1
- 
+        chromos = np.array([ind.cromossomo for ind in self.individuos])
+        ci = np.sum(chromos, axis=0) / len(self.individuos)
+        I = np.sum((chromos - ci) ** 2)
+        if I >= self.maxDiv:
+            self.maxDiv = I
+        return I/self.maxDiv
+    
     def totalFitness(self):
         totF = 0
         for i in self.individuos:
@@ -187,7 +166,7 @@ class Populacao():
         melhorGeral = copy.deepcopy(self.individuos[melhorInd])#melhor individuo encontrado ate o momento
         
         #guarda estatisticas da populacao inicial
-        diver += [self.diversidadeN()]
+        diver += [self.diversidade()]
         melhoresInd += [self.individuos[melhorInd].cromossomo]
         melhoresIndF += [self.individuos[melhorInd].fit]
         mediasIndF += [self.mediaDaGeracao()]
@@ -227,12 +206,14 @@ class Populacao():
                 melhorGeral = copy.deepcopy(self.individuos[melhorInd])
                 
             #guarda estatisticas da populacao
-            diver += [self.diversidadeN()]
+            diver += [self.diversidade()]
             melhoresInd += [melhorGeral.cromossomo]
             melhoresIndF += [melhorGeral.fit]
             mediasIndF += [self.mediaDaGeracao()]
             
         #TODO retornar melhor individuo geral e seu fitness
+        print("Melhor fitness encontrado:", melhorGeral.fit)
+        print("Melhor individuo encontrado:", melhorGeral.cromossomo)
         return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF, "diver":diver, "bGeral":melhorGeral}
  
     def geraGraficos(self, result):
