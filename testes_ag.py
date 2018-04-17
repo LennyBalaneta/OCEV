@@ -1,6 +1,10 @@
 import Populacao as p
+from FuncoesFitness import FuncFit
 
-a = p.Populacao(30, 100, "BIN")
+problema = "BitsAlternados"
+tamPop = 30
+
+a = p.Populacao(FuncFit[problema], tamPop)
 
 #configurações
 a.maxGeracoes = 2000

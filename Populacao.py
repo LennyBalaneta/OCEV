@@ -11,31 +11,34 @@ import copy
  
  
 class Populacao():
-    def __init__(self, tamPop, tamCrom, cod, minB=-10, maxB=10, elit=True):
-        if cod == "BIN":
-            self.individuos = [IndividuoBin.IndividuoBin(tamCrom, minB, maxB) for i in range(tamPop)]
+    #def __init__(self, tamPop, tamCrom, cod, minB=-10, maxB=10, elit=True):
+    def __init__(self, problema, tamPop):
+        if problema["codificacao"] == "BIN":
+            self.individuos = [IndividuoBin.IndividuoBin(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
             self.tipoCrossover = "1pto"
             self.tipoMutacao = "bitflip"
-        elif cod == "INT":
-            self.individuos = [IndividuoInt.IndividuoInt(tamCrom, minB, maxB) for i in range(tamPop)]
+        elif problema["codificacao"] == "INT":
+            self.individuos = [IndividuoInt.IndividuoInt(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
             self.tipoCrossover = "null"
             self.tipoMutacao = "null"
-        elif cod == "REAL":
-            self.individuos = [IndividuoReal.IndividuoReal(tamCrom, minB, maxB) for i in range(tamPop)]
+        elif problema["codificacao"] == "REAL":
+            self.individuos = [IndividuoReal.IndividuoReal(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
             self.tipoCrossover = "null"
             self.tipoMutacao = "null"
-        elif cod == "INT-PERM":
-            self.individuos = [IndividuoIntPerm.IndividuoIntPerm(tamCrom, minB, maxB) for i in range(tamPop)]
+        elif problema["codificacao"] == "INT-PERM":
+            self.individuos = [IndividuoIntPerm.IndividuoIntPerm(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
             self.tipoCrossover = "null"
             self.tipoMutacao = "null"
         else:
             raise Exception("Codificacao invalida")
+        self.nome = problema["nome"]
+        self.descricao = problema["descricao"]
         self.tamPop = tamPop
-        self.tipoCod = cod
-        self.tamCrom = tamCrom
+        self.tipoCod = problema["codificacao"]
+        self.tamCrom = problema["tamCrom"]
         self.maxDiv = None
         self.maxGeracoes = 2000
-        self.elit = elit
+        self.elit = True
         self.tamTorneio = 3
         self.tipoSelecao = "roleta"
         self.txMut = 0.05#taxa de mutacao
@@ -254,6 +257,8 @@ class Populacao():
         plt.show()
  
     def info(self):
+        print("---", self.nome, "---")
+        print(self.descricao)
         print("---Configuracoes do AG---")
         print("Tipo de codificacao:", self.tipoCod)
         print("Tamanho da populacao:", self.tamPop)
