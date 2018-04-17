@@ -20,6 +20,18 @@ def fitBitsAlt(cromossomo):
             if cromossomo[i+1] == 1:
                 f += 1
     return f
+    
+def fitParImpar(cromossomo):
+    '''Funcao fitness para problema dos ints alternados par/impar'''
+    f = 0
+    for i in range(len(cromossomo)-1):
+        if cromossomo[i]%2 == 1:
+            if cromossomo[i+1]%2 == 0:
+                f += 1
+        else:
+            if cromossomo[i+1]%2 == 1:
+                f += 1
+    return f    
 
 FuncFit = {
     "BitsAlternados" : {
@@ -30,6 +42,15 @@ FuncFit = {
         "boundMin" : 0,
         "boundMax" : 0,
         "fitnessFunc" : fitBitsAlt,
+    },
+    "ParImpar" : {
+        "nome" : "Par Impar",
+        "descricao" : "Problema dos digitos alternados par/impar",
+        "codificacao" : "INT",
+        "tamCrom" : 100,
+        "boundMin" : -10,
+        "boundMax" : 10,
+        "fitnessFunc" : fitParImpar,
     }
 }
 
