@@ -3,26 +3,19 @@ import numpy as np
 import math
  
 class IndividuoBin(Individuo):
-    def __init__(self, tam, minB=-10, maxB=10):
+    def __init__(self, tam, minB, maxB, fitFunc):
         self.min_bound = minB
         self.max_bound = maxB
         self.cod = "BIN"
         self.cromossomo = self.init_cromossomo(tam)
+        self.fitFunc = fitFunc
         self.fit = None
         
     def init_cromossomo(self, tamCrom):
         return np.random.RandomState().randint(2, size=tamCrom)
  
     def fitness(self):
-        f = 0
-        for i in range(len(self.cromossomo)-1):
-            if self.cromossomo[i] == 1:
-                if self.cromossomo[i+1] == 0:
-                    f += 1
-            else:
-                if self.cromossomo[i+1] == 1:
-                    f += 1
-        return f
+        return self.fitFunc(self.cromossomo)
  
     def crossover(self, i2, tipo):
         #tipo de crossover

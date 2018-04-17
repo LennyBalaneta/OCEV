@@ -2,7 +2,7 @@ from Individuo import *
 import numpy as np
 
 class IndividuoIntPerm(Individuo):
-    def __init__(self, tam, minB=-10, maxB=10):
+    def __init__(self, tam, minB, maxB, fitFunc):
         self.min_bound = minB
         self.max_bound = maxB
         self.cod = "INT-PERM"

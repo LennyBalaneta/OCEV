@@ -11,22 +11,21 @@ import copy
  
  
 class Populacao():
-    #def __init__(self, tamPop, tamCrom, cod, minB=-10, maxB=10, elit=True):
     def __init__(self, problema, tamPop):
         if problema["codificacao"] == "BIN":
-            self.individuos = [IndividuoBin.IndividuoBin(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
+            self.individuos = [IndividuoBin.IndividuoBin(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
             self.tipoCrossover = "1pto"
             self.tipoMutacao = "bitflip"
         elif problema["codificacao"] == "INT":
-            self.individuos = [IndividuoInt.IndividuoInt(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
+            self.individuos = [IndividuoInt.IndividuoInt(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
             self.tipoCrossover = "null"
             self.tipoMutacao = "null"
         elif problema["codificacao"] == "REAL":
-            self.individuos = [IndividuoReal.IndividuoReal(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
+            self.individuos = [IndividuoReal.IndividuoReal(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
             self.tipoCrossover = "null"
             self.tipoMutacao = "null"
         elif problema["codificacao"] == "INT-PERM":
-            self.individuos = [IndividuoIntPerm.IndividuoIntPerm(problema["tamCrom"], problema["boundMin"], problema["boundMax"]) for i in range(tamPop)]
+            self.individuos = [IndividuoIntPerm.IndividuoIntPerm(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
             self.tipoCrossover = "null"
             self.tipoMutacao = "null"
         else:

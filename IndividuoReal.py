@@ -3,7 +3,7 @@ import numpy as np
 import math
 
 class IndividuoReal(Individuo):
-    def __init__(self, tam, minB=-10, maxB=10):
+    def __init__(self, tam, minB, maxB, fitFunc):
         self.min_bound = minB
         self.max_bound = maxB
         self.cod = "REAL"
