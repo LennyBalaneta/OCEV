@@ -8,11 +8,14 @@ class IndividuoBin(Individuo):
         self.max_bound = maxB
         self.cod = "BIN"
         self.cromossomo = self.init_cromossomo(tam)
+        self.fit = None
+        self.bla = 0
  
     def init_cromossomo(self, tamCrom):
         return np.random.RandomState().randint(2, size=tamCrom)
  
     def fitness(self):
+        self.bla += 1
         f = 0
         for i in range(len(self.cromossomo)-1):
             if self.cromossomo[i] == 1:
@@ -22,7 +25,7 @@ class IndividuoBin(Individuo):
                 if self.cromossomo[i+1] == 1:
                     f += 1
         return f
-        
+ 
     def crossover(self, i2, tipo):
         #tipo de crossover
         if tipo == "1pto":
@@ -33,7 +36,7 @@ class IndividuoBin(Individuo):
             return self.crossoverUnif(i2)
         else:
             raise Exception("Crossover [", tipo, "] indefinido")
-        
+ 
     def crossover1pto(self, i2):
         #Define o ponto de corte
         ptoC = np.random.randint(0, len(self.cromossomo))
@@ -91,13 +94,13 @@ class IndividuoBin(Individuo):
                 crom2 = np.append(crom2, self.cromossomo[i]);
         #retorna uma lista com os 2 individuos gerados
         return [crom1, crom2]
-    
+ 
     def mutacao(self, tx, tipo):
         if tipo == "bitflip":
             self.mutacaoBitFlip(tx)
         else:
             raise Exception("Mutacao[", tipo, "] indefinida")
-    
+ 
     def mutacaoBitFlip(self, tx):
         #para cada elemento do cromossomo da bitflip com um chance de txMut
         for i in range(len(self.cromossomo)):
