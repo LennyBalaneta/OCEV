@@ -1,82 +1,74 @@
 from Individuo import *
 import numpy as np
 import math
-
+import random
+ 
 class IndividuoReal(Individuo):
     def __init__(self, tam, minB, maxB, fitFunc):
         self.min_bound = minB
         self.max_bound = maxB
         self.cod = "REAL"
-        self.isBin = True
         self.cromossomo = self.init_cromossomo(tam)
-    
+        self.fitFunc = fitFunc
+        self.fit = None
+ 
     def init_cromossomo(self, tamCrom):
-        if not self.isBin:#Real normal
-            return np.random.RandomState().uniform(self.min_bound, self.max_bound, size=tamCrom)
-        else:#Real em binario
-            return np.random.RandomState().randint(2, size=26)
-        
+        return np.random.RandomState().uniform(self.min_bound, self.max_bound, size=tamCrom)
+ 
     def fitness(self):
-        if not self.isBin:#Real normal
-            return self.ackleyFunc(self.cromossomo)
-        else:#Real em binario
-            '''
-            var1 -> [0:13]
-            var2 -> [13:26]
-            '''
-            vars = [self.ajuste(self.cromDecode(self.cromossomo, 0, 13)), self.ajuste(self.cromDecode(self.cromossomo, 13, 26))]
-            return self.ackleyFunc(vars)
-        
-    def cromDecode(self, c, ini, fin):
-        numTotal = c[ini:fin]
-        numStr = ""
-        for n in numTotal:
-            numStr += str(n)
-        return int(numStr, 2)
-
+        return self.fitFunc(self.cromossomo)
+ 
     def crossover(self, i2, tipo):
-        print("Crossover indefinido")
-        return -1
-        
+        #tipo de crossover
+        if tipo == "unif":
+            return self.crossoverUniformA(i2)
+        else:
+            raise Exception("Crossover [", tipo, "] indefinido")
+ 
+    def crossoverUniformA(self, i2):
+        #gera os 2 individuos resultantes do crossover
+        #inicializa o array com o primeiro elemento
+        if np.random.random() < 0.5:
+            crom1 = np.array((self.cromossomo[0]))
+            crom2 = np.array((i2.cromossomo[0]))
+        else:
+            #print("Flip em 0")
+            crom1 = np.array((i2.cromossomo[0]))
+            crom2 = np.array((self.cromossomo[0]))
+ 
+        #percorre o resto do array verificando se ocorre o flip ou nao
+        for i in range(1, len(self.cromossomo)):
+            if np.random.random() < 0.5:
+                crom1 = np.append(crom1, self.cromossomo[i]);
+                crom2 = np.append(crom2, i2.cromossomo[i]);
+            else:
+                #print("Flip em ", i)
+                crom1 = np.append(crom1, i2.cromossomo[i]);
+                crom2 = np.append(crom2, self.cromossomo[i]);
+        #retorna uma lista com os 2 individuos gerados
+        return [crom1, crom2]
+ 
     def mutacao(self, tx, tipo):
-        print("Mutacao indefinida")
-        return -1
+        if tipo == "gauss":
+            self.mutacaoGaussiana(tx)
+        else:
+            raise Exception("Mutacao[", tipo, "] indefinida")
+            
+    def mutacaoGaussiana(self, tx):
+        #std usado na mutacao Gaussiana
+        std = 0.3
         
-    def ajuste(self, num):
-        '''
-        numero recebido -> [0, 8191]
-        bounds desejados -> [-32.00, 32.00]
-        '''
-        l = 13
-        x_min = -32.0
-        x_max = 32.0
-        x = x_min + ((x_max - x_min)/(2**l-1)) *  num
-        return x
-
-    def ackleyFunc(self, vars):
-        first_sum = 0.0
-        second_sum = 0.0
-        for v in range(len(vars)):
-            first_sum += vars[v] ** 2.0
-            second_sum += math.cos(2.0 * math.pi * vars[v])
-        n = float(len(vars))
-        return -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
-        
-        
-'''
-    #funcao 12 maximos locais
-    #arrrumar a quantidade de bits -> 16
-    def fitness2(self):
-        x = self.ajuste2(self.cromDecode(self.cromossomo, 0, 16))
-        return math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4)
-        
-    def ajuste2(self, num):
-        
-        #numero recebido -> [0, 65536]
-        #bounds desejados -> [-2.0000, 2.0000]
-        n = num/10000
-        n -= 2
-        if n > 2:
-            n = 2
-        return n
-'''
+        #para cada elemento do cromossomo da bitflip com um chance de txMut
+        for i in range(len(self.cromossomo)):
+            if np.random.random() < tx:
+                mean = self.cromossomo[i]
+                x1 = random.random()
+                x2 = random.random()
+                
+                if x1 == 0.0:
+                    x1 = 1.0
+                if x2 == 0.0:
+                    x2 = 1.0
+                
+                y1 = math.sqrt(-2.0 * math.log(x1)) * math.cos(2.0 * math.pi * x2)
+                self.cromossomo[i] = y1 * std + mean

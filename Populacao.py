@@ -18,12 +18,12 @@ class Populacao():
             self.tipoMutacao = "bitflip"
         elif problema["codificacao"] == "INT":
             self.individuos = [IndividuoInt.IndividuoInt(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
-            self.tipoCrossover = "null"
-            self.tipoMutacao = "null"
+            self.tipoCrossover = "1pto"
+            self.tipoMutacao = "rndVal"
         elif problema["codificacao"] == "REAL":
             self.individuos = [IndividuoReal.IndividuoReal(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
-            self.tipoCrossover = "null"
-            self.tipoMutacao = "null"
+            self.tipoCrossover = "unif"
+            self.tipoMutacao = "gauss"
         elif problema["codificacao"] == "INT-PERM":
             self.individuos = [IndividuoIntPerm.IndividuoIntPerm(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
             self.tipoCrossover = "null"
@@ -157,7 +157,6 @@ class Populacao():
         mediasIndF = []#media de fitness por geracao
         diver = []#diversidade
         ger = 0#n da geracao
-        vOtimo = range(len(self.individuos))#valor otimo da funcao(TODO tirar essa informacao daqui)
         
         #calcula o fitness da populacao inicial
         piorInd, melhorInd = self.calculaFitness()
@@ -173,7 +172,7 @@ class Populacao():
         
         
         #loop principal
-        while ger < self.maxGeracoes and self.individuos[melhorInd].fit != vOtimo:
+        while ger < self.maxGeracoes:
             ger += 1
  
             #print

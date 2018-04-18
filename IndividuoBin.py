@@ -10,7 +10,7 @@ class IndividuoBin(Individuo):
         self.cromossomo = self.init_cromossomo(tam)
         self.fitFunc = fitFunc
         self.fit = None
-        
+ 
     def init_cromossomo(self, tamCrom):
         return np.random.RandomState().randint(2, size=tamCrom)
  
@@ -31,10 +31,6 @@ class IndividuoBin(Individuo):
     def crossover1pto(self, i2):
         #Define o ponto de corte
         ptoC = np.random.randint(0, len(self.cromossomo))
-        #print("Cromossomo 1: ", self.cromossomo)
-        #print("Cromossomo 2: ", i2.cromossomo)
-        #print("Ponto de corte: ", ptoC)
- 
         #gera os 2 individuos resultantes do crossover
         crom1 = np.concatenate((self.cromossomo[:ptoC], i2.cromossomo[ptoC:]))
         crom2 = np.concatenate((i2.cromossomo[:ptoC], self.cromossomo[ptoC:]))
@@ -46,10 +42,6 @@ class IndividuoBin(Individuo):
         #Define os pontos de corte
         ptoC1 = np.random.randint(0, len(self.cromossomo)-1)
         ptoC2 = np.random.randint(ptoC1+1, len(self.cromossomo))
-        #print("Cromossomo 1: ", self.cromossomo)
-        #print("Cromossomo 2: ", i2.cromossomo)
-        #print("Ponto de corte 1: ", ptoC1)
-        #print("Ponto de corte 2: ", ptoC2)
  
         #gera os 2 individuos resultantes do crossover
         crom1 = np.concatenate((self.cromossomo[:ptoC1], i2.cromossomo[ptoC1:ptoC2], self.cromossomo[ptoC2:]))
@@ -60,10 +52,6 @@ class IndividuoBin(Individuo):
  
  
     def crossoverUnif(self, i2):
-        #Define os pontos de corte
-        #print("Cromossomo 1: ", self.cromossomo)
-        #print("Cromossomo 2: ", i2.cromossomo)
- 
         #gera os 2 individuos resultantes do crossover
         #inicializa o array com o primeiro elemento
         if np.random.random() < 0.5:
