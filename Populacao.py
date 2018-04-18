@@ -200,14 +200,18 @@ class Populacao():
             if self.elit == True:
                 self.individuos[piorInd] = copy.deepcopy(melhorGeral)
             
-            #verifica se tem um melhor geral
+            #verifica se tem um novo melhor geral
             if self.individuos[melhorInd].fit > melhorGeral.fit:
                 melhorGeral = copy.deepcopy(self.individuos[melhorInd])
+            else:
+                if self.elit == True:
+                    #o novo melhor da geracao é o de elitismo, guardado na posicao do pior
+                    melhorInd = piorInd
                 
             #guarda estatisticas da populacao
             diver += [self.diversidade()]
-            melhoresInd += [melhorGeral.cromossomo]
-            melhoresIndF += [melhorGeral.fit]
+            melhoresInd += [self.individuos[melhorInd].cromossomo]
+            melhoresIndF += [self.individuos[melhorInd].fit]
             mediasIndF += [self.mediaDaGeracao()]
             
         #TODO retornar melhor individuo geral e seu fitness

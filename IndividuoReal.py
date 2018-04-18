@@ -56,7 +56,7 @@ class IndividuoReal(Individuo):
             
     def mutacaoGaussiana(self, tx):
         #std usado na mutacao Gaussiana
-        std = 0.3
+        std = 0.3#0.1 tava muito pouco
         
         #para cada elemento do cromossomo da bitflip com um chance de txMut
         for i in range(len(self.cromossomo)):
