@@ -78,8 +78,18 @@ def tspFunc(cromossomo):
         custo += distanciasTSP[cromossomo[i-1]][cromossomo[i]]
     return (11.46 - custo)/11.46
 
-    
-    
+def ackleyFuncBin(cromossomo):
+    '''Funcao fitness para problema da funcao ackley com codificacao binaria'''
+    vars = [ajuste(cromDecode(cromossomo, 0, 13), 13, -32.00, 32.00), ajuste(cromDecode(cromossomo, 13, 26), 13, -32.00, 32.00)]
+    first_sum = 0.0
+    second_sum = 0.0
+    for v in range(len(vars)):
+        first_sum += vars[v] ** 2.0
+        second_sum += math.cos(2.0 * math.pi * vars[v])
+    n = float(len(vars))
+    result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
+    #return result
+    return 1.0 - result/22.4#maio valor estimado
     
 #------------------------------Funcoes para mostrar resultado------------------------------
 def resultBitsAlt(cromossomo):
@@ -118,6 +128,23 @@ def resultTsp(cromossomo):
         
     print("Melhor valor de f:", custo)
     print("Melhor solucao:", cromossomo)
+    
+def resultAckleyBin(cromossomo):
+    '''Funcao de resultado para problema da funcao ackley com codificacao binaria'''
+    
+    #calculo do valor real de f
+    vars = [ajuste(cromDecode(cromossomo, 0, 13), 13, -32.00, 32.00), ajuste(cromDecode(cromossomo, 13, 26), 13, -32.00, 32.00)]
+    first_sum = 0.0
+    second_sum = 0.0
+    for v in range(len(vars)):
+        first_sum += vars[v] ** 2.0
+        second_sum += math.cos(2.0 * math.pi * vars[v])
+    n = float(len(vars))
+    result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
+    
+    print("Melhor valor de f:", result)
+    print("Melhor solucao:", vars)
+    print("Melhor solucao em binario:", cromossomo)
 
 #------------------------------Dicionário de informações dos problemas------------------------------    
 FuncFit = {
@@ -145,7 +172,7 @@ FuncFit = {
         "nome" : "Ackley",
         "descricao" : "Funcao ackley com codificacao real",
         "codificacao" : "REAL",
-        "tamCrom" : 30,
+        "tamCrom" : 20,
         "boundMin" : -32.0,
         "boundMax" : 32.0,
         "fitnessFunc" : ackleyFunc,
@@ -160,5 +187,68 @@ FuncFit = {
         "boundMax" : 0,
         "fitnessFunc" : tspFunc,
         "funcResultado" : resultTsp
+    },
+    "AckleyBin" : {
+        "nome" : "AckleyReal",
+        "descricao" : "Funcao ackley 2 dimensões, 2 casas de precisão com codificacao binaria",
+        "codificacao" : "BIN",
+        "tamCrom" : 26,
+        "boundMin" : -32.0,
+        "boundMax" : 32.0,
+        "fitnessFunc" : ackleyFuncBin,
+        "funcResultado" : ackleyFuncBin
     }
 }
+
+
+#------------------------------Funções auxiliares------------------------------
+
+def cromDecode(c, ini, fin):
+    '''Recebe um cromossomo binario e retorna inteiro entre o intervalo [ini:fin]'''
+    numTotal = c[ini:fin]
+    numStr = ""
+    for n in numTotal:
+        numStr += str(n)
+    return int(numStr, 2)
+
+    
+def ajuste(num, l, x_min, x_max):
+        '''Recebe um numero inteiro, e coloca na escala desejada
+           num      -> numero inteiro
+           l        -> quantidade de bits do numero em binario
+           x_min    -> bound inferior
+           x_max    -> bound superior
+        '''
+        
+        return x_min + ((x_max - x_min)/(2**l-1)) *  num
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
