@@ -2,12 +2,13 @@ from Individuo import *
 import numpy as np
 
 class IndividuoInt(Individuo):
-    def __init__(self, tam, minB, maxB, fitFunc):
+    def __init__(self, tam, minB, maxB, fitFunc, funcResultado):
         self.min_bound = minB
         self.max_bound = maxB
         self.cod = "INT"
         self.cromossomo = self.init_cromossomo(tam)
         self.fitFunc = fitFunc
+        self.funcResultado = funcResultado
         self.fit = None
     
     def init_cromossomo(self, tamCrom):
@@ -83,7 +84,7 @@ class IndividuoInt(Individuo):
         return [crom1, crom2]
         
     def mutacao(self, tx, tipo):
-        if tipo == "rndVal":
+        if tipo == "rndval":
             self.mutacaoRndVal(tx)
         else:
             raise Exception("Mutacao[", tipo, "] indefinida")

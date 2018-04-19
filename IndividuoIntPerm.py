@@ -2,12 +2,13 @@ from Individuo import *
 import numpy as np
 
 class IndividuoIntPerm(Individuo):
-    def __init__(self, tam, minB, maxB, fitFunc):
+    def __init__(self, tam, minB, maxB, fitFunc, funcResultado):
         self.min_bound = minB
         self.max_bound = maxB
         self.cod = "INT-PERM"
         self.cromossomo = self.init_cromossomo(tam)
         self.fitFunc = fitFunc
+        self.funcResultado = funcResultado
         self.fit = None
         
     def init_cromossomo(self, tamCrom):

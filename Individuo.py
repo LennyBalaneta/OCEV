@@ -3,7 +3,7 @@ import numpy as np
 
 class Individuo(ABC):
     @abstractmethod
-    def __init__(self, tam, minB, maxB, fitFunc):
+    def __init__(self, tam, minB, maxB, fitFunc, funcResultado):
         pass
     
     @abstractmethod

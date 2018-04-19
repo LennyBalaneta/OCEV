@@ -13,21 +13,21 @@ import copy
 class Populacao():
     def __init__(self, problema, tamPop):
         if problema["codificacao"] == "BIN":
-            self.individuos = [IndividuoBin.IndividuoBin(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
+            self.individuos = [IndividuoBin.IndividuoBin(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"], problema["funcResultado"]) for i in range(tamPop)]
             self.tipoCrossover = "1pto"
             self.tipoMutacao = "bitflip"
         elif problema["codificacao"] == "INT":
-            self.individuos = [IndividuoInt.IndividuoInt(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
+            self.individuos = [IndividuoInt.IndividuoInt(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"], problema["funcResultado"]) for i in range(tamPop)]
             self.tipoCrossover = "1pto"
-            self.tipoMutacao = "rndVal"
+            self.tipoMutacao = "rndval"
         elif problema["codificacao"] == "REAL":
-            self.individuos = [IndividuoReal.IndividuoReal(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
+            self.individuos = [IndividuoReal.IndividuoReal(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"], problema["funcResultado"]) for i in range(tamPop)]
             self.tipoCrossover = "unif"
             self.tipoMutacao = "gauss"
         elif problema["codificacao"] == "INT-PERM":
-            self.individuos = [IndividuoIntPerm.IndividuoIntPerm(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"]) for i in range(tamPop)]
-            self.tipoCrossover = "null"
-            self.tipoMutacao = "null"
+            self.individuos = [IndividuoIntPerm.IndividuoIntPerm(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"], problema["funcResultado"]) for i in range(tamPop)]
+            self.tipoCrossover = "pmx"
+            self.tipoMutacao = "swap"
         else:
             raise Exception("Codificacao invalida")
         self.nome = problema["nome"]
@@ -214,9 +214,10 @@ class Populacao():
             melhoresIndF += [self.individuos[melhorInd].fit]
             mediasIndF += [self.mediaDaGeracao()]
             
-        #TODO retornar melhor individuo geral e seu fitness
-        print("Melhor fitness encontrado:", melhorGeral.fit)
-        print("Melhor individuo encontrado:", melhorGeral.cromossomo)
+        #print("Melhor fitness encontrado:", melhorGeral.fit)
+        #print("Melhor individuo encontrado:", melhorGeral.cromossomo)
+        #print da melhor solucao
+        melhorGeral.funcResultado(melhorGeral.cromossomo)
         return {"bInd":melhoresInd, "bF":melhoresIndF, "mF":mediasIndF, "diver":diver, "bGeral":melhorGeral}
  
     def geraGraficos(self, result):

@@ -2,14 +2,14 @@ import Populacao as p
 from FuncoesFitness import FuncFit
 
 problema = "TSP"
-tamPop = 50
+tamPop = 30
 
 a = p.Populacao(FuncFit[problema], tamPop)
 
 #configurações
 a.maxGeracoes = 2000
-a.elit = False
-a.tipoSelecao = "roleta"
+a.elit = True
+a.tipoSelecao = "torneio"
 a.tamTorneio = 3
 a.tipoCrossover = "pmx"
 a.tipoMutacao = "swap"

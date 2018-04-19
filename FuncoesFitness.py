@@ -10,9 +10,10 @@ tamCrom      -> tamanho do cromossomo
 boundMin    -> bound inferior
 boundSup    -> bound superior
 fitnessFunc -> funcao fitness para o problema
+funcResultado -> funcao de resultado para o problema
 '''
 
-#Funcoes fitness para os problemas
+#------------------------------Funcoes fitness para os problemas------------------------------
 def fitBitsAlt(cromossomo):
     '''Funcao fitness para problema dos bits alternados'''
     f = 0
@@ -24,7 +25,7 @@ def fitBitsAlt(cromossomo):
             if cromossomo[i+1] == 1:
                 f += 1
     return f
- 
+
 def fitParImpar(cromossomo):
     '''Funcao fitness para problema dos ints alternados par/impar'''
     f = 0
@@ -50,6 +51,7 @@ def ackleyFunc(cromossomo):
     return 1.0 - result/22.4#maio valor estimado
     
 def tspFunc(cromossomo):
+    '''Funcao fitness para problema do tsp'''
     cidades = [(0.00, 0.20),
                (0.15, 0.80),
                (0.20, 0.65),
@@ -67,8 +69,58 @@ def tspFunc(cromossomo):
     for i in range(1, len(cromossomo)):
         custo += math.sqrt((cidades[cromossomo[i-1]][0]-cidades[cromossomo[i]][0])**2 + (cidades[cromossomo[i-1]][1]-cidades[cromossomo[i]][1])**2)
     return (11.46 - custo)/11.46#TODO implementar minimizacao
+
     
-#Dicionário de informações dos problemas
+    
+    
+#------------------------------Funcoes para mostrar resultado------------------------------
+def resultBitsAlt(cromossomo):
+    '''Funcao de resultado para problema dos bits alternados'''
+    print("Melhor valor de f:", fitBitsAlt(cromossomo))
+    print("Melhor solucao:", cromossomo)
+    
+def resultParImpar(cromossomo):
+    '''Funcao de resultado para problema dos ints alternados par/impar'''
+    print("Melhor valor de f:", fitParImpar(cromossomo))
+    print("Melhor solucao:", cromossomo)
+    
+def resultAckley(cromossomo):
+    '''Funcao de resultado para problema da funcao ackley'''
+    
+    #calculo do valor real de f
+    first_sum = 0.0
+    second_sum = 0.0
+    for v in range(len(cromossomo)):
+        first_sum += cromossomo[v] ** 2.0
+        second_sum += math.cos(2.0 * math.pi * cromossomo[v])
+    n = float(len(cromossomo))
+    result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
+    
+    print("Melhor valor de f:", result)
+    print("Melhor solucao:", cromossomo)
+    
+def resultTsp(cromossomo):
+    '''Funcao de resultado para problema do tsp'''
+    #Melhor indivíduo para o TSP: [7 3 9 4 8 5 1 2 0 6]/[6 0 2 1 5 8 4 9 3 7] -> 2.4567852651255824
+    #calculo do valor real de f
+    cidades = [(0.00, 0.20),
+               (0.15, 0.80),
+               (0.20, 0.65),
+               (0.90, 0.30),
+               (0.75, 0.45),
+               (0.30, 0.75),
+               (0.05, 0.05),
+               (0.95, 0.95),
+               (0.55, 0.55),
+               (0.85, 0.25)]
+    custo = 0.0
+    for i in range(1, len(cromossomo)):
+        custo += math.sqrt((cidades[cromossomo[i-1]][0]-cidades[cromossomo[i]][0])**2 + (cidades[cromossomo[i-1]][1]-cidades[cromossomo[i]][1])**2)
+        
+    print("Melhor valor de f:", custo)
+    print("Melhor solucao:", cromossomo)
+
+#------------------------------Dicionário de informações dos problemas------------------------------    
 FuncFit = {
     "BitsAlternados" : {
         "nome" : "Bits Alternados",
@@ -78,6 +130,7 @@ FuncFit = {
         "boundMin" : 0,
         "boundMax" : 0,
         "fitnessFunc" : fitBitsAlt,
+        "funcResultado" : resultBitsAlt
     },
     "ParImpar" : {
         "nome" : "Par Impar",
@@ -87,15 +140,17 @@ FuncFit = {
         "boundMin" : -10,
         "boundMax" : 10,
         "fitnessFunc" : fitParImpar,
+        "funcResultado" : resultParImpar
     },
     "AckleyReal" : {
         "nome" : "Ackley",
         "descricao" : "Funcao ackley com codificacao real",
         "codificacao" : "REAL",
-        "tamCrom" : 20,
+        "tamCrom" : 30,
         "boundMin" : -32.0,
         "boundMax" : 32.0,
         "fitnessFunc" : ackleyFunc,
+        "funcResultado" : resultAckley
     },
     "TSP" : {
         "nome" : "TSP",
@@ -105,5 +160,6 @@ FuncFit = {
         "boundMin" : 0,
         "boundMax" : 0,
         "fitnessFunc" : tspFunc,
+        "funcResultado" : resultTsp
     }
 }
