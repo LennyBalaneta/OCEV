@@ -11,6 +11,8 @@ boundMin    -> bound inferior
 boundSup    -> bound superior
 fitnessFunc -> funcao fitness para o problema
 '''
+
+#Funcoes fitness para os problemas
 def fitBitsAlt(cromossomo):
     '''Funcao fitness para problema dos bits alternados'''
     f = 0
@@ -46,7 +48,27 @@ def ackleyFunc(cromossomo):
     result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
     #return result
     return 1.0 - result/22.4#maio valor estimado
- 
+    
+def tspFunc(cromossomo):
+    cidades = [(0.00, 0.20),
+               (0.15, 0.80),
+               (0.20, 0.65),
+               (0.90, 0.30),
+               (0.75, 0.45),
+               (0.30, 0.75),
+               (0.05, 0.05),
+               (0.95, 0.95),
+               (0.55, 0.55),
+               (0.85, 0.25)]
+               
+    #TODO implementar matriz de distancias
+    custo = 0.0
+    
+    for i in range(1, len(cromossomo)):
+        custo += math.sqrt((cidades[cromossomo[i-1]][0]-cidades[cromossomo[i]][0])**2 + (cidades[cromossomo[i-1]][1]-cidades[cromossomo[i]][1])**2)
+    return (11.46 - custo)/11.46#TODO implementar minimizacao
+    
+#Dicionário de informações dos problemas
 FuncFit = {
     "BitsAlternados" : {
         "nome" : "Bits Alternados",
@@ -74,5 +96,14 @@ FuncFit = {
         "boundMin" : -32.0,
         "boundMax" : 32.0,
         "fitnessFunc" : ackleyFunc,
+    },
+    "TSP" : {
+        "nome" : "TSP",
+        "descricao" : "Problema do caixeiro viajante",
+        "codificacao" : "INT-PERM",
+        "tamCrom" : 10,
+        "boundMin" : 0,
+        "boundMax" : 0,
+        "fitnessFunc" : tspFunc,
     }
 }
