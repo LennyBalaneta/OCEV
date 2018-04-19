@@ -22,6 +22,10 @@ class IndividuoReal(Individuo):
         #tipo de crossover
         if tipo == "unif":
             return self.crossoverUniformA(i2)
+        elif tipo == "blx":
+            return self.crossoverBLX(i2)
+        elif tipo == "aritm":
+            return self.crossoverAritm(i2)
         else:
             raise Exception("Crossover [", tipo, "] indefinido")
  
@@ -47,7 +51,41 @@ class IndividuoReal(Individuo):
                 crom2 = np.append(crom2, self.cromossomo[i]);
         #retorna uma lista com os 2 individuos gerados
         return [crom1, crom2]
- 
+    
+    def crossoverBLX(self, i2):
+        #gera os 2 individuos resultantes do crossover
+        a = 0.5 #parametro [0, 1], default é 0.5
+                
+        #inicializa o array com o primeiro elemento
+        di = abs(self.cromossomo[0] - i2.cromossomo[0])
+        minB = min(self.cromossomo[0], i2.cromossomo[0]) - a*di
+        maxB = max(self.cromossomo[0], i2.cromossomo[0]) + a*di
+        crom1 = np.array(np.random.uniform(minB, maxB))
+        crom2 = np.array(np.random.uniform(maxB, maxB))
+        
+        #percorre o resto do array
+        for i in range(1, len(self.cromossomo)):
+            di = abs(self.cromossomo[i] - i2.cromossomo[i])
+            minB = min(self.cromossomo[i], i2.cromossomo[i]) - a*di
+            maxB = max(self.cromossomo[i], i2.cromossomo[i]) + a*di
+            crom1 = np.append(crom1, np.random.uniform(minB, maxB))
+            crom2 = np.append(crom2, np.random.uniform(minB, maxB))
+        return [crom1, crom2]
+        
+    def crossoverAritm(self, i2):
+        #gera os 2 individuos resultantes do crossover
+        a = 0.5 #parametro [0, 1], default é 0.5
+                
+        #inicializa o array com o primeiro elemento
+        crom1 = np.array(a * self.cromossomo[0] + (1.0-a) * i2.cromossomo[0])
+        crom2 = np.array((1.0-a) * self.cromossomo[0] + a * i2.cromossomo[0])
+        
+        #percorre o resto do array
+        for i in range(1, len(self.cromossomo)):
+            crom1 = np.append(crom1, a * self.cromossomo[i] + (1.0-a) * i2.cromossomo[i])
+            crom2 = np.append(crom2, (1.0-a) * self.cromossomo[i] + a * i2.cromossomo[i])
+        return [crom1, crom2]
+    
     def mutacao(self, tx, tipo):
         if tipo == "gauss":
             self.mutacaoGaussiana(tx)
