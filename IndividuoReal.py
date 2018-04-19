@@ -166,35 +166,3 @@ class IndividuoReal(Individuo):
                 if valor > self.max_bound:
                     valor = self.max_bound
                 self.cromossomo[i] = valor
-
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                

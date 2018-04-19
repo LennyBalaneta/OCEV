@@ -91,6 +91,12 @@ def ackleyFuncBin(cromossomo):
     #return result
     return 1.0 - result/22.4#maio valor estimado
     
+def _12maxFunc(cromossomo):
+    '''Funcao fitness para problema da funcao de 12 maximos locais presente nos slides'''
+    x = ajuste(cromDecode(cromossomo, 0, 16), 16, -2.0, 2.0)
+    result = math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4)
+    return (result+4.0)/6.0
+    
 #------------------------------Funcoes para mostrar resultado------------------------------
 def resultBitsAlt(cromossomo):
     '''Funcao de resultado para problema dos bits alternados'''
@@ -145,6 +151,14 @@ def resultAckleyBin(cromossomo):
     print("Melhor valor de f:", result)
     print("Melhor solucao:", vars)
     print("Melhor solucao em binario:", cromossomo)
+    
+def result12Max(cromossomo):
+    '''Funcao de resultado para problema dos 12 maximos locais presente nos slides'''
+    x = ajuste(cromDecode(cromossomo, 0, 16), 16, -2.0, 2.0)
+    
+    print("Melhor valor de f:", math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4))
+    print("Melhor solucao:", x)
+    print("Melhor solucao em binario:", cromossomo)
 
 #------------------------------Dicionário de informações dos problemas------------------------------    
 FuncFit = {
@@ -196,7 +210,17 @@ FuncFit = {
         "boundMin" : -32.0,
         "boundMax" : 32.0,
         "fitnessFunc" : ackleyFuncBin,
-        "funcResultado" : ackleyFuncBin
+        "funcResultado" : resultAckleyBin
+    },
+    "12Max" : {
+        "nome" : "12MaxLocais",
+        "descricao" : "Funcao dos slides com 12 maximos locais",
+        "codificacao" : "BIN",
+        "tamCrom" : 16,
+        "boundMin" : -2.0,
+        "boundMax" : 2.0,
+        "fitnessFunc" : _12maxFunc,
+        "funcResultado" : result12Max
     }
 }
 
@@ -221,34 +245,3 @@ def ajuste(num, l, x_min, x_max):
         '''
         
         return x_min + ((x_max - x_min)/(2**l-1)) *  num
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
