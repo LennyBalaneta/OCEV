@@ -52,23 +52,31 @@ def ackleyFunc(cromossomo):
     
 def tspFunc(cromossomo):
     '''Funcao fitness para problema do tsp'''
-    cidades = [(0.00, 0.20),
-               (0.15, 0.80),
-               (0.20, 0.65),
-               (0.90, 0.30),
-               (0.75, 0.45),
-               (0.30, 0.75),
-               (0.05, 0.05),
-               (0.95, 0.95),
-               (0.55, 0.55),
-               (0.85, 0.25)]
-               
-    #TODO implementar matriz de distancias
+    
+    #calcula apenas uma vez a matriz de distancias e guarda em uma variavel global
+    global distanciasTSP
+    if not "distanciasTSP" in globals():
+        cidades = [(0.00, 0.20),
+                   (0.15, 0.80),
+                   (0.20, 0.65),
+                   (0.90, 0.30),
+                   (0.75, 0.45),
+                   (0.30, 0.75),
+                   (0.05, 0.05),
+                   (0.95, 0.95),
+                   (0.55, 0.55),
+                   (0.85, 0.25)]
+        distanciasTSP = []
+        for i in range(len(cidades)):
+            l = []
+            for j in range(len(cidades)):
+               l.append(math.sqrt((cidades[i][0]-cidades[j][0])**2 + (cidades[i][1]-cidades[j][1])**2))
+            distanciasTSP.append(l)
     custo = 0.0
     
     for i in range(1, len(cromossomo)):
-        custo += math.sqrt((cidades[cromossomo[i-1]][0]-cidades[cromossomo[i]][0])**2 + (cidades[cromossomo[i-1]][1]-cidades[cromossomo[i]][1])**2)
-    return (11.46 - custo)/11.46#TODO implementar minimizacao
+        custo += distanciasTSP[cromossomo[i-1]][cromossomo[i]]
+    return (11.46 - custo)/11.46
 
     
     
@@ -102,20 +110,11 @@ def resultAckley(cromossomo):
 def resultTsp(cromossomo):
     '''Funcao de resultado para problema do tsp'''
     #Melhor indivíduo para o TSP: [7 3 9 4 8 5 1 2 0 6]/[6 0 2 1 5 8 4 9 3 7] -> 2.4567852651255824
+    
     #calculo do valor real de f
-    cidades = [(0.00, 0.20),
-               (0.15, 0.80),
-               (0.20, 0.65),
-               (0.90, 0.30),
-               (0.75, 0.45),
-               (0.30, 0.75),
-               (0.05, 0.05),
-               (0.95, 0.95),
-               (0.55, 0.55),
-               (0.85, 0.25)]
     custo = 0.0
     for i in range(1, len(cromossomo)):
-        custo += math.sqrt((cidades[cromossomo[i-1]][0]-cidades[cromossomo[i]][0])**2 + (cidades[cromossomo[i-1]][1]-cidades[cromossomo[i]][1])**2)
+        custo += distanciasTSP[cromossomo[i-1]][cromossomo[i]]
         
     print("Melhor valor de f:", custo)
     print("Melhor solucao:", cromossomo)
