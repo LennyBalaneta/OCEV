@@ -70,7 +70,7 @@ FuncFit = {
         "nome" : "Ackley",
         "descricao" : "Funcao ackley com codificacao real",
         "codificacao" : "REAL",
-        "tamCrom" : 10,
+        "tamCrom" : 20,
         "boundMin" : -32.0,
         "boundMax" : 32.0,
         "fitnessFunc" : ackleyFunc,

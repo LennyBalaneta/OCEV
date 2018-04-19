@@ -60,16 +60,41 @@ class IndividuoReal(Individuo):
         di = abs(self.cromossomo[0] - i2.cromossomo[0])
         minB = min(self.cromossomo[0], i2.cromossomo[0]) - a*di
         maxB = max(self.cromossomo[0], i2.cromossomo[0]) + a*di
-        crom1 = np.array(np.random.uniform(minB, maxB))
-        crom2 = np.array(np.random.uniform(maxB, maxB))
+        c1 = np.random.uniform(minB, maxB)
+        c2 = np.random.uniform(maxB, maxB)
+        
+        #verificacao de bounds
+        if c1 < self.min_bound:
+            c1 = self.min_bound
+        if c1 > self.max_bound:
+            c1 = self.max_bound
+        if c2 < self.min_bound:
+            c2 = self.min_bound
+        if c2 > self.max_bound:
+            c2 = self.max_bound
+        crom1 = np.array(c1)
+        crom2 = np.array(c2)
         
         #percorre o resto do array
         for i in range(1, len(self.cromossomo)):
             di = abs(self.cromossomo[i] - i2.cromossomo[i])
             minB = min(self.cromossomo[i], i2.cromossomo[i]) - a*di
             maxB = max(self.cromossomo[i], i2.cromossomo[i]) + a*di
-            crom1 = np.append(crom1, np.random.uniform(minB, maxB))
-            crom2 = np.append(crom2, np.random.uniform(minB, maxB))
+            c1 = np.random.uniform(minB, maxB)
+            c2 = np.random.uniform(minB, maxB)
+            
+            #verificacao dos bound
+            if c1 < self.min_bound:
+                c1 = self.min_bound
+            if c1 > self.max_bound:
+                c1 = self.max_bound
+            if c2 < self.min_bound:
+                c2 = self.min_bound
+            if c2 > self.max_bound:
+                c2 = self.max_bound
+            
+            crom1 = np.append(crom1, c1)
+            crom2 = np.append(crom2, c2)
         return [crom1, crom2]
         
     def crossoverAritm(self, i2):
@@ -77,13 +102,37 @@ class IndividuoReal(Individuo):
         a = 0.5 #parametro [0, 1], default é 0.5
                 
         #inicializa o array com o primeiro elemento
-        crom1 = np.array(a * self.cromossomo[0] + (1.0-a) * i2.cromossomo[0])
-        crom2 = np.array((1.0-a) * self.cromossomo[0] + a * i2.cromossomo[0])
+        c1 = a * self.cromossomo[0] + (1.0-a) * i2.cromossomo[0]
+        c2 = (1.0-a) * self.cromossomo[0] + a * i2.cromossomo[0]
+        
+        #verificacao de bounds
+        if c1 < self.min_bound:
+            c1 = self.min_bound
+        if c1 > self.max_bound:
+            c1 = self.max_bound
+        if c2 < self.min_bound:
+            c2 = self.min_bound
+        if c2 > self.max_bound:
+            c2 = self.max_bound
+        crom1 = np.array(c1)
+        crom2 = np.array(c2)
         
         #percorre o resto do array
         for i in range(1, len(self.cromossomo)):
-            crom1 = np.append(crom1, a * self.cromossomo[i] + (1.0-a) * i2.cromossomo[i])
-            crom2 = np.append(crom2, (1.0-a) * self.cromossomo[i] + a * i2.cromossomo[i])
+            c1 = a * self.cromossomo[i] + (1.0-a) * i2.cromossomo[i]
+            c2 = (1.0-a) * self.cromossomo[i] + a * i2.cromossomo[i]
+            
+            #verificacao dos bound
+            if c1 < self.min_bound:
+                c1 = self.min_bound
+            if c1 > self.max_bound:
+                c1 = self.max_bound
+            if c2 < self.min_bound:
+                c2 = self.min_bound
+            if c2 > self.max_bound:
+                c2 = self.max_bound
+            crom1 = np.append(crom1, c1)
+            crom2 = np.append(crom2, c2)
         return [crom1, crom2]
     
     def mutacao(self, tx, tipo):
@@ -109,4 +158,42 @@ class IndividuoReal(Individuo):
                     x2 = 1.0
                 
                 y1 = math.sqrt(-2.0 * math.log(x1)) * math.cos(2.0 * math.pi * x2)
-                self.cromossomo[i] = y1 * std + mean
+                valor = y1 * std + mean
+                #verificacao de bounds
+                if valor < self.min_bound:
+                    valor = self.min_bound
+                if valor > self.max_bound:
+                    valor = self.max_bound
+                self.cromossomo[i] = valor
+
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
