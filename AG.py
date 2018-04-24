@@ -10,7 +10,7 @@ import copy
  
  
  
-class Populacao():
+class AG():
     def __init__(self, problema, tamPop):
         if problema["codificacao"] == "BIN":
             self.individuos = [IndividuoBin.IndividuoBin(problema["tamCrom"], problema["boundMin"], problema["boundMax"], problema["fitnessFunc"], problema["funcResultado"]) for i in range(tamPop)]
@@ -227,8 +227,8 @@ class Populacao():
         ax[0].set_xlabel("Geração")
         ax[0].set_ylabel("Fitness")
         ax[0].set_title("Fitness por geração")
-        ax[0].plot(result["bF"], label="Melhor", lw=1)
-        ax[0].plot(result["mF"], label="Media", lw=1, ls="--")
+        ax[0].plot(result["bF"], label="Melhor", lw=1, ls="--")
+        ax[0].plot(result["mF"], label="Media", lw=1, ls="-")
         ax[0].legend(loc="upper left")
  
         #grafico da media
@@ -331,10 +331,3 @@ class Populacao():
         for i in self.individuos:
             s += str(i) + "\n"
         return s
- 
-def main():
-    pop = Populacao(5, 5, "BIN")
-    print(pop)
-
-if __name__ == "__main__":
-    main()

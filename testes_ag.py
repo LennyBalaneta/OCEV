@@ -1,11 +1,11 @@
-import Populacao as p
+import AG as p
 from FuncoesFitness import FuncFit
 
 problema = "BitsAlternados"
 tamPop = 30
 
 #1 execucao
-a = p.Populacao(FuncFit[problema], tamPop)
+a = p.AG(FuncFit[problema], tamPop)
 
 #configurações
 a.maxGeracoes = 2000
@@ -28,7 +28,7 @@ execucoes = 5
 resultados = []
 for i in range(execucoes):
     print("Execucao", (i+1))
-    a = p.Populacao(FuncFit[problema], tamPop)
+    a = p.AG(FuncFit[problema], tamPop)
 
     #configurações
     a.maxGeracoes = 1000
