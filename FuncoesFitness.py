@@ -97,6 +97,17 @@ def _12maxFunc(cromossomo):
     result = math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4)
     return (result+4.0)/6.0
     
+def radiosFit(cromossomo):
+    '''Funcao de resultado para problema dos radios'''
+    #st [0, 5] -> 0-24
+    #lx [6, 9] -> 0-16
+    st = math.floor(ajuste(cromDecode(cromossomo, 0, 5), 5, 0.0, 24.0))
+    lx = math.floor(ajuste(cromDecode(cromossomo, 5, 9), 4, 0.0, 16.0))
+    #restricao: st+2lx <= 40
+    h = max(0, (st + 2*lx - 40)/16)
+    fo = (30*st + 40*lx)/1360.0 - h
+    return fo
+    
 #------------------------------Funcoes para mostrar resultado------------------------------
 def resultBitsAlt(cromossomo):
     '''Funcao de resultado para problema dos bits alternados'''
@@ -158,6 +169,22 @@ def result12Max(cromossomo):
     
     print("Melhor valor de f:", math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4))
     print("Melhor solucao:", x)
+    print("Melhor solucao em binario:", cromossomo)
+    
+def resultRadios(cromossomo):
+    '''Funcao de resultado para problema dos radios'''
+    #calcula valor real da funcao
+    st = math.floor(ajuste(cromDecode(cromossomo, 0, 5), 5, 0.0, 24.0))
+    lx = math.floor(ajuste(cromDecode(cromossomo, 5, 9), 4, 0.0, 16.0))
+    #restricao: st+2lx <= 40
+    h = max(0, (st + 2*lx - 40)/16)
+    fo = 30*st + 40*lx
+    print("Melhor valor de f:", fo)
+    print("Melhor solucao: st=", st, " | lx=", lx)
+    if h == 0:
+        print("Respeita restricoes")
+    else:
+        print("nao respeita restricoes")
     print("Melhor solucao em binario:", cromossomo)
 
 #------------------------------Dicionário de informações dos problemas------------------------------    
@@ -221,6 +248,16 @@ FuncFit = {
         "boundMax" : 2.0,
         "fitnessFunc" : _12maxFunc,
         "funcResultado" : result12Max
+    },
+    "Radios" : {
+        "nome" : "Fabrica de radios",
+        "descricao" : "Problema da fabrica de radios",
+        "codificacao" : "BIN",
+        "tamCrom" : 9,
+        "boundMin" : 0,
+        "boundMax" : 0,
+        "fitnessFunc" : radiosFit,
+        "funcResultado" : resultRadios
     }
 }
 

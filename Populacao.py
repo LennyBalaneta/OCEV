@@ -176,7 +176,7 @@ class Populacao():
             ger += 1
  
             #print
-            if ger%10 == 0:
+            if ger%10000 == 0:
                 print("---Geracao", ger, "---", "Melhor fitness: ", melhorGeral.fit)
  
             #selecao
@@ -228,7 +228,7 @@ class Populacao():
         ax[0].set_ylabel("Fitness")
         ax[0].set_title("Fitness por geração")
         ax[0].plot(result["bF"], label="Melhor", lw=1)
-        ax[0].plot(result["mF"], label="Media", lw=1)
+        ax[0].plot(result["mF"], label="Media", lw=1, ls="--")
         ax[0].legend(loc="upper left")
  
         #grafico da media
@@ -255,7 +255,77 @@ class Populacao():
         print("Taxa de crossover:", self.txCross)
         print("Tipo de mutacao:", self.tipoMutacao)
         print("Taxa de mutacao:", self.txMut)
- 
+    
+    def help(self):
+        print("--- Definicao de problemas: ---")
+        print("Para definir um problema é preciso cria-lo arquivo \"FuncoesFitness.py\"")
+        print("Definindo uma funcao fitness (com resultado sempre positivo), uma funcao para mostrar o resultado e preencher as informacoes necessarias no dicionario \"FuncFit\"")
+        
+        print("--- Utilizacao do AG: ---")
+        print("1 - é necessario criar uma instancia do AG passando como parametro o problema desejado e o tamanho da populacao")
+        print("2 - mudar as configuracoes desejadas")
+        print("3 - iniciar o loop evolutivo")
+        print("4 - gerar os graficos")
+        print("Ex: ")
+        print("a = AG.ag(\"BitsAlternados\", 30)\na.maxGeracoes = 2000\nr = a.loopEvolucao()\na.geraGraficos(r)")
+        
+        print("--- Configuracoes do AG: ---")
+        print("Para mudar as configuracoes do AG altere as seguintes variaveis:\n")
+        
+        #qtdgeracoes
+        print("Quantidade de geracoes:")
+        print("\tmaxGeracoes = [0, ?] \n")
+        
+        #selecao
+        print("Rotinas de selecao:")
+        print("\ttipoSelecao = ")
+        print("\t\t\"roleta\" -> selecao por roleta de probabilidades")
+        print("\t\t\"torneio\" -> selecao por torneio de tamanho definido pela variavel \"tamTorneio\" \n")
+        
+        #elitismo
+        print("Elitismo:")
+        print("\telit = [True | False] \n")
+        
+        #tipo crossover
+        print("Rotinas de crossover:")
+        print("\ttipoCrossover = ")
+        print("\t\tBIN:")
+        print("\t\t\t\"1pto\" -> crossover de 1 ponto")
+        print("\t\t\t\"2pto\" -> crossover de 2 pontos")
+        print("\t\t\t\"unif\" -> crossover uniforme")
+        print("\t\tREAL:")
+        print("\t\t\t\"unif\" -> crossover uniforme")
+        print("\t\t\t\"blx\" -> crossover BLX")
+        print("\t\t\t\"aritm\" -> crossover aritmetico")
+        print("\t\tINT:")
+        print("\t\t\t\"1pto\" -> crossover de 1 ponto")
+        print("\t\t\t\"2pto\" -> crossover de 2 pontos")
+        print("\t\t\t\"unif\" -> crossover uniforme")
+        print("\t\tINT-PERM:")
+        print("\t\t\t\"pmx\" -> crossover PMX \n")
+        
+        #taxa crossover
+        print("Taxa de crossover:")
+        print("\ttxCross = [0.0, 1.0] \n")
+        
+        #tipo mutacao
+        print("Rotinas de mutacao:")
+        print("\ttipoMutacao = ")
+        print("\t\tBIN:")
+        print("\t\t\t\"bitflip\" -> mutacao bitflip")
+        print("\t\tREAL:")
+        print("\t\t\t\"gauss\" -> mutacao Gaussiana")
+        print("\t\t\t\"delta\" -> mutacao Delta")
+        print("\t\tINT:")
+        print("\t\t\t\"rndval\" -> mutacao de valor aleatorio")
+        print("\t\tINT-PERM:")
+        print("\t\t\t\"swap\" -> mutacao swap \n")
+
+        #taxa crossover
+        print("Taxa de mutacao:")
+        print("\ttxMut = [0.0, 1.0] \n")
+        
+    
     def __str__(self):
         s = "Individuos:\n"
         for i in self.individuos:
@@ -265,6 +335,6 @@ class Populacao():
 def main():
     pop = Populacao(5, 5, "BIN")
     print(pop)
- 
+
 if __name__ == "__main__":
     main()

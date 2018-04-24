@@ -139,6 +139,8 @@ class IndividuoReal(Individuo):
     def mutacao(self, tx, tipo):
         if tipo == "gauss":
             self.mutacaoGaussiana(tx)
+        elif tipo == "delta":
+            self.mutacaoDelta(tx)
         else:
             raise Exception("Mutacao[", tipo, "] indefinida")
             
@@ -160,6 +162,20 @@ class IndividuoReal(Individuo):
                 
                 y1 = math.sqrt(-2.0 * math.log(x1)) * math.cos(2.0 * math.pi * x2)
                 valor = y1 * std + mean
+                #verificacao de bounds
+                if valor < self.min_bound:
+                    valor = self.min_bound
+                if valor > self.max_bound:
+                    valor = self.max_bound
+                self.cromossomo[i] = valor
+                
+    def mutacaoDelta(self, tx):
+        #para cada elemento do cromossomo da bitflip com um chance de txMut
+        for i in range(len(self.cromossomo)):
+            if np.random.random() < tx:
+                mean = self.cromossomo[i]
+                y1 = np.random.uniform(self.min_bound, self.max_bound)/10.0
+                valor = y1 + mean
                 #verificacao de bounds
                 if valor < self.min_bound:
                     valor = self.min_bound
