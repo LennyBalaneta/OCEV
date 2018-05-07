@@ -12,7 +12,7 @@ boundSup    -> bound superior
 fitnessFunc -> funcao fitness para o problema
 funcResultado -> funcao de resultado para o problema
 '''
-
+ 
 #------------------------------Funcoes fitness para os problemas------------------------------
 def fitBitsAlt(cromossomo):
     '''Funcao fitness para problema dos bits alternados'''
@@ -25,7 +25,7 @@ def fitBitsAlt(cromossomo):
             if cromossomo[i+1] == 1:
                 f += 1
     return f
-
+ 
 def fitParImpar(cromossomo):
     '''Funcao fitness para problema dos ints alternados par/impar'''
     f = 0
@@ -49,10 +49,10 @@ def ackleyFunc(cromossomo):
     result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
     #return result
     return 1.0 - result/22.4#maio valor estimado
-    
+ 
 def tspFunc(cromossomo):
     '''Funcao fitness para problema do tsp'''
-    
+ 
     #calcula apenas uma vez a matriz de distancias e guarda em uma variavel global
     global distanciasTSP
     if not "distanciasTSP" in globals():
@@ -73,11 +73,11 @@ def tspFunc(cromossomo):
                l.append(math.sqrt((cidades[i][0]-cidades[j][0])**2 + (cidades[i][1]-cidades[j][1])**2))
             distanciasTSP.append(l)
     custo = 0.0
-    
+ 
     for i in range(1, len(cromossomo)):
         custo += distanciasTSP[cromossomo[i-1]][cromossomo[i]]
     return (11.46 - custo)/11.46
-
+ 
 def ackleyFuncBin(cromossomo):
     '''Funcao fitness para problema da funcao ackley com codificacao binaria'''
     vars = [ajuste(cromDecode(cromossomo, 0, 13), 13, -32.00, 32.00), ajuste(cromDecode(cromossomo, 13, 26), 13, -32.00, 32.00)]
@@ -90,13 +90,13 @@ def ackleyFuncBin(cromossomo):
     result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
     #return result
     return 1.0 - result/22.4#maio valor estimado
-    
+ 
 def _12maxFunc(cromossomo):
     '''Funcao fitness para problema da funcao de 12 maximos locais presente nos slides'''
     x = ajuste(cromDecode(cromossomo, 0, 16), 16, -2.0, 2.0)
     result = math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4)
     return (result+4.0)/6.0
-    
+ 
 def radiosFit(cromossomo):
     '''Funcao de resultado para problema dos radios'''
     #st [0, 5] -> 0-24
@@ -107,21 +107,98 @@ def radiosFit(cromossomo):
     h = max(0, (st + 2*lx - 40)/16)
     fo = (30*st + 40*lx)/1360.0 - h
     return fo
-    
+ 
+def rainhasFit(cromossomo):
+    n = int(len(cromossomo)/2)
+    conf = 0
+    for i in range(n - 1):#0 a 6
+        for j in range(i+1, n):#i a 7
+            if cromossomo[i*2] == cromossomo[j*2]:#linha
+                #print("Colisao L: ", i, "|", j)
+                conf += 1
+            if cromossomo[i*2+1] == cromossomo[j*2+1]:#coluna
+                #print("Colisao C: ", i, "|", j)
+                conf += 1
+            if cromossomo[i*2]+cromossomo[i*2+1] == cromossomo[j*2]+cromossomo[j*2+1]:#diagonal 1 x1+y1 == x2+y2
+                #print("Colisao D1: ", i, "|", j)
+                conf += 1
+            if cromossomo[i*2]-cromossomo[i*2+1] == cromossomo[j*2]-cromossomo[j*2+1]:#diagonal 2 x1-y1 == x2-y2
+                #print("Colisao D2: ", i, "|", j)
+                conf += 1
+    m = (((n-1)*(n))/2) * 4
+    #print("Conf:", conf)
+    #print("n:", n)
+    #print("m:", m)
+    return (m - conf)/m
+ 
+def rainhasFitBIN(cromossomo):
+    pos = []
+    n = int(len(cromossomo)/6)
+    for i in range(n):
+        pos.append(math.floor(ajuste(cromDecode(cromossomo, i*6, i*6+3), 3, 0.0, float(n-1))))
+        pos.append(math.floor(ajuste(cromDecode(cromossomo, i*6+3, i*6+6), 3, 0.0, float(n-1))))
+ 
+    conf = 0
+    for i in range(n - 1):#0 a 6
+        for j in range(i+1, n):#i a 7
+            if pos[i*2] == pos[j*2]:#linha
+                #print("Colisao L: ", i, "|", j)
+                conf += 1
+            if pos[i*2+1] == pos[j*2+1]:#coluna
+                #print("Colisao C: ", i, "|", j)
+                conf += 1
+            if pos[i*2]+pos[i*2+1] == pos[j*2]+pos[j*2+1]:#diagonal 1 x1+y1 == x2+y2
+                #print("Colisao D1: ", i, "|", j)
+                conf += 1
+            if pos[i*2]-pos[i*2+1] == pos[j*2]-pos[j*2+1]:#diagonal 2 x1-y1 == x2-y2
+                #print("Colisao D2: ", i, "|", j)
+                conf += 1
+    m = (((n-1)*(n))/2) * 4
+    #print("Conf:", conf)
+    #print("n:", n)
+    #print("m:", m)
+    return (m - conf)/m
+ 
+def rainhasFitPerm(cromossomo):
+    n = len(cromossomo)
+    conf = 0
+    for i in range(n-1):#0 a 6
+        for j in range(i+1, n):#i a 7
+            if abs(i-j) == abs(cromossomo[i]-cromossomo[j]):
+                conf += 1
+    m = ((n-1) * n) / 2
+    return (m - conf) / m
+ 
+def rainhasFitPerm2(cromossomo):
+    n = len(cromossomo)
+    qtd = 1
+    tab = [(0, cromossomo[0])]
+    for i in range(1, n):#0 a 6
+        conf = False
+        for j in range(len(tab)):#i a 7
+            if abs(i-tab[j][0]) == abs(cromossomo[i]-tab[j][1]):
+                conf = True
+                break
+        if conf == False:
+            qtd += 1
+            tab.append((j, cromossomo[j]))
+ 
+    return qtd / n
+ 
 #------------------------------Funcoes para mostrar resultado------------------------------
 def resultBitsAlt(cromossomo):
     '''Funcao de resultado para problema dos bits alternados'''
     print("Melhor valor de f:", fitBitsAlt(cromossomo))
     print("Melhor solucao:", cromossomo)
-    
+ 
 def resultParImpar(cromossomo):
     '''Funcao de resultado para problema dos ints alternados par/impar'''
     print("Melhor valor de f:", fitParImpar(cromossomo))
     print("Melhor solucao:", cromossomo)
-    
+ 
 def resultAckley(cromossomo):
     '''Funcao de resultado para problema da funcao ackley'''
-    
+ 
     #calculo do valor real de f
     first_sum = 0.0
     second_sum = 0.0
@@ -130,25 +207,25 @@ def resultAckley(cromossomo):
         second_sum += math.cos(2.0 * math.pi * cromossomo[v])
     n = float(len(cromossomo))
     result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
-    
+ 
     print("Melhor valor de f:", result)
     print("Melhor solucao:", cromossomo)
-    
+ 
 def resultTsp(cromossomo):
     '''Funcao de resultado para problema do tsp'''
     #Melhor indivíduo para o TSP: [7 3 9 4 8 5 1 2 0 6]/[6 0 2 1 5 8 4 9 3 7] -> 2.4567852651255824
-    
+ 
     #calculo do valor real de f
     custo = 0.0
     for i in range(1, len(cromossomo)):
         custo += distanciasTSP[cromossomo[i-1]][cromossomo[i]]
-        
+ 
     print("Melhor valor de f:", custo)
     print("Melhor solucao:", cromossomo)
-    
+ 
 def resultAckleyBin(cromossomo):
     '''Funcao de resultado para problema da funcao ackley com codificacao binaria'''
-    
+ 
     #calculo do valor real de f
     vars = [ajuste(cromDecode(cromossomo, 0, 13), 13, -32.00, 32.00), ajuste(cromDecode(cromossomo, 13, 26), 13, -32.00, 32.00)]
     first_sum = 0.0
@@ -158,19 +235,19 @@ def resultAckleyBin(cromossomo):
         second_sum += math.cos(2.0 * math.pi * vars[v])
     n = float(len(vars))
     result = -20.0*math.exp(-0.2*math.sqrt(first_sum/n)) - math.exp(second_sum/n) + 20 + math.e
-    
+ 
     print("Melhor valor de f:", result)
     print("Melhor solucao:", vars)
     print("Melhor solucao em binario:", cromossomo)
-    
+ 
 def result12Max(cromossomo):
     '''Funcao de resultado para problema dos 12 maximos locais presente nos slides'''
     x = ajuste(cromDecode(cromossomo, 0, 16), 16, -2.0, 2.0)
-    
+ 
     print("Melhor valor de f:", math.cos(20*x) - (math.sqrt(x**2)/2) + ((x**3)/4))
     print("Melhor solucao:", x)
     print("Melhor solucao em binario:", cromossomo)
-    
+ 
 def resultRadios(cromossomo):
     '''Funcao de resultado para problema dos radios'''
     #calcula valor real da funcao
@@ -186,8 +263,78 @@ def resultRadios(cromossomo):
     else:
         print("nao respeita restricoes")
     print("Melhor solucao em binario:", cromossomo)
-
-#------------------------------Dicionário de informações dos problemas------------------------------    
+ 
+def resultRainhas(cromossomo):
+    '''Funcao de resultado para problema das rainhas'''
+    n = int(len(cromossomo)/2)
+    m = (((n-1)*(n))/2) * 4
+    f = rainhasFit(cromossomo)
+    conf = m - m*f
+    print("Melhor valor de f:", rainhasFit(cromossomo))
+    print("Melhor solucao:", cromossomo)
+    print("Quantidade de colisoes:", conf)
+ 
+def resultRainhasBIN(cromossomo):
+    '''Funcao de resultado para problema das rainhas binario'''
+    pos = []
+    n = int(len(cromossomo)/6)
+    for i in range(n):
+        pos.append(math.floor(ajuste(cromDecode(cromossomo, i*6, i*6+3), 3, 0.0, float(n-1))))
+        pos.append(math.floor(ajuste(cromDecode(cromossomo, i*6+3, i*6+6), 3, 0.0, float(n-1))))
+    m = (((n-1)*(n))/2) * 4
+    f = rainhasFitBIN(cromossomo)
+    conf = m - m*f
+    print("Melhor valor de f:", rainhasFitBIN(cromossomo))
+    print("Melhor solucao:", pos)
+    print("Melhor solucao binario:", cromossomo)
+    print("Quantidade de colisoes:", int(conf))
+ 
+def resultRainhasPerm(cromossomo):
+    '''Funcao de resultado para problema das rainhas permutado'''
+    n = len(cromossomo)
+    conf = 0
+    for i in range(n-1):#0 a 6
+        for j in range(i+1, n):#i a 7
+            if abs(i-j) == abs(cromossomo[i]-cromossomo[j]):
+                conf += 1
+    m = ((n-1) * n) / 2
+    fit = (m - conf) / m
+ 
+    pos = []
+    for i in range(n):
+        pos.append((i, cromossomo[i]))
+ 
+    print("Melhor valor de f:", fit)
+    print("Melhor solucao(coordenadas):", pos)
+    print("Melhor solucao permutada:", cromossomo)
+    print("Quantidade de colisoes:", int(conf))
+ 
+def resultRainhasPerm2(cromossomo):
+    '''Funcao de resultado para problema das rainhas permutado'''
+    n = len(cromossomo)
+    qtd = 1
+    tab = [(0, cromossomo[0])]
+    for i in range(1, n):#0 a 6
+        conf = False
+        for j in range(len(tab)):#i a 7
+            if abs(i-tab[j][0]) == abs(cromossomo[i]-tab[j][1]):
+                conf = True
+                break
+        if conf == False:
+            qtd += 1
+            tab.append((j, cromossomo[j]))
+ 
+    fit = qtd / n
+ 
+    pos = []
+    for i in range(n):
+        pos.append((i, cromossomo[i]))
+ 
+    print("Melhor valor de f:", fit)
+    print("Melhor solucao(coordenadas):", pos)
+    print("Melhor solucao permutada:", cromossomo)
+    print("Quantidade de rainhas posicionadas:", int(qtd))
+#------------------------------Dicionário de informações dos problemas------------------------------
 FuncFit = {
     "BitsAlternados" : {
         "nome" : "Bits Alternados",
@@ -258,12 +405,52 @@ FuncFit = {
         "boundMax" : 0,
         "fitnessFunc" : radiosFit,
         "funcResultado" : resultRadios
+    },
+    "rainhas" : {
+        "nome" : "Rainhas",
+        "descricao" : "Problema das rainhas",
+        "codificacao" : "INT",
+        "tamCrom" : 8,#2 * qtd de rainhas
+        "boundMin" : 0,#0
+        "boundMax" : 3,#qtd de rainhas - 1
+        "fitnessFunc" : rainhasFit,
+        "funcResultado" : resultRainhas
+    },
+    "rainhasBIN" : {
+        "nome" : "Rainhas BIN",
+        "descricao" : "Problema das rainhas com codificacao binaria",
+        "codificacao" : "BIN",
+        "tamCrom" : 384,#6 * qtd de rainhas
+        "boundMin" : 0,#0
+        "boundMax" : 63,#qtd de rainhas - 1
+        "fitnessFunc" : rainhasFitBIN,
+        "funcResultado" : resultRainhasBIN
+    },
+    "rainhasPERM" : {
+        "nome" : "Rainhas PERM",
+        "descricao" : "Problema das rainhas com codificacao permutada",
+        "codificacao" : "INT-PERM",
+        "tamCrom" : 64,#qtd de rainhas
+        "boundMin" : 0,
+        "boundMax" : 0,
+        "fitnessFunc" : rainhasFitPerm,
+        "funcResultado" : resultRainhasPerm
+    },
+    "rainhasPERM2" : {
+        "nome" : "Rainhas PERM",
+        "descricao" : "Problema das rainhas com codificacao permutada",
+        "codificacao" : "INT-PERM",
+        "tamCrom" : 64,#qtd de rainhas
+        "boundMin" : 0,
+        "boundMax" : 0,
+        "fitnessFunc" : rainhasFitPerm2,
+        "funcResultado" : resultRainhasPerm2
     }
 }
-
-
+ 
+ 
 #------------------------------Funções auxiliares------------------------------
-
+ 
 def cromDecode(c, ini, fin):
     '''Recebe um cromossomo binario e retorna inteiro entre o intervalo [ini:fin]'''
     numTotal = c[ini:fin]
@@ -271,8 +458,8 @@ def cromDecode(c, ini, fin):
     for n in numTotal:
         numStr += str(n)
     return int(numStr, 2)
-
-    
+ 
+ 
 def ajuste(num, l, x_min, x_max):
         '''Recebe um numero inteiro, e coloca na escala desejada
            num      -> numero inteiro
@@ -280,5 +467,5 @@ def ajuste(num, l, x_min, x_max):
            x_min    -> bound inferior
            x_max    -> bound superior
         '''
-        
+ 
         return x_min + ((x_max - x_min)/(2**l-1)) *  num

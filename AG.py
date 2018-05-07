@@ -176,7 +176,7 @@ class AG():
             ger += 1
  
             #print
-            if ger%10000 == 0:
+            if ger%100 == 0:
                 print("---Geracao", ger, "---", "Melhor fitness: ", melhorGeral.fit)
  
             #selecao

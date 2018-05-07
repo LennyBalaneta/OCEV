@@ -1,7 +1,7 @@
 import AG as p
 from FuncoesFitness import FuncFit
 
-problema = "BitsAlternados"
+problema = "rainhasPERM"
 tamPop = 30
 
 #1 execucao
