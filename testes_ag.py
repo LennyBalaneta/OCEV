@@ -1,8 +1,8 @@
 import AG as p
 from FuncoesFitness import FuncFit
 
-problema = "rainhasPERM"
-tamPop = 30
+problema = "rainhasPERML"
+tamPop = 50
 
 #1 execucao
 a = p.AG(FuncFit[problema], tamPop)

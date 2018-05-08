@@ -184,6 +184,43 @@ def rainhasFitPerm2(cromossomo):
             tab.append((j, cromossomo[j]))
  
     return qtd / n
+
+def rainhasFitPermL(cromossomo):
+    n = len(cromossomo)
+
+    #calcula apenas uma vez a matriz de lucros e guarda em uma variavel global
+    global lucros, maxLuc
+    if not "lucros" in globals():
+        lucros = []
+        c = 1
+        for i in range(n):
+            l = []
+            for j in range(n):
+                l.append(c)
+                c += 1
+            lucros.append(l)
+        maxLuc = 0
+        for i in range(n):
+            maxLuc += lucros[i][i]#soma da diagonal principal
+    
+    #calculo da primeira parte do fitness
+    conf = 0
+    for i in range(n-1):#0 a 6
+        for j in range(i+1, n):#i a 7
+            if abs(i-j) == abs(cromossomo[i]-cromossomo[j]):
+                conf += 1
+    m = ((n-1) * n) / 2
+    
+    fit = (m - conf) / m#fitness base
+    
+    #se achou uma solucao otima, adiciona o valor do lucro
+    fit /= 2
+    somaLucro = 0
+    if fit == 0.5:
+        for i in range(n):
+            somaLucro += lucros[i][cromossomo[i]]
+        fit += (somaLucro/maxLuc)/2#50% para cada parte
+    return fit
  
 #------------------------------Funcoes para mostrar resultado------------------------------
 def resultBitsAlt(cromossomo):
@@ -334,6 +371,36 @@ def resultRainhasPerm2(cromossomo):
     print("Melhor solucao(coordenadas):", pos)
     print("Melhor solucao permutada:", cromossomo)
     print("Quantidade de rainhas posicionadas:", int(qtd))
+    
+def resultRainhasPermL(cromossomo):
+    n = len(cromossomo)
+    #calculo da primeira parte do fitness
+    conf = 0
+    for i in range(n-1):#0 a 6
+        for j in range(i+1, n):#i a 7
+            if abs(i-j) == abs(cromossomo[i]-cromossomo[j]):
+                conf += 1
+    m = ((n-1) * n) / 2
+    
+    fit = (m - conf) / m#fitness base
+    
+    #se achou uma solucao otima, adiciona o valor do lucro
+    fit /= 2
+    somaLucro = 0
+    if fit == 0.5:
+        for i in range(n):
+            somaLucro += lucros[i][cromossomo[i]]
+        fit += (somaLucro/maxLuc)/2#50% para cada parte
+        
+    pos = []
+    for i in range(n):
+        pos.append((i, cromossomo[i]))
+ 
+    print("Melhor valor de f:", fit)
+    print("Melhor solucao(coordenadas):", pos)
+    print("Melhor solucao permutada:", cromossomo)
+    print("Quantidade de colisoes:", int(conf))
+    print("Lucro obtido:", int(somaLucro))
 #------------------------------Dicionário de informações dos problemas------------------------------
 FuncFit = {
     "BitsAlternados" : {
@@ -430,7 +497,7 @@ FuncFit = {
         "nome" : "Rainhas PERM",
         "descricao" : "Problema das rainhas com codificacao permutada",
         "codificacao" : "INT-PERM",
-        "tamCrom" : 64,#qtd de rainhas
+        "tamCrom" : 128,#qtd de rainhas
         "boundMin" : 0,
         "boundMax" : 0,
         "fitnessFunc" : rainhasFitPerm,
@@ -445,6 +512,16 @@ FuncFit = {
         "boundMax" : 0,
         "fitnessFunc" : rainhasFitPerm2,
         "funcResultado" : resultRainhasPerm2
+    },
+    "rainhasPERML" : {
+        "nome" : "Rainhas PERM com lucro",
+        "descricao" : "Problema das rainhas com codificacao permutada com lucro",
+        "codificacao" : "INT-PERM",
+        "tamCrom" : 32,#qtd de rainhas
+        "boundMin" : 0,
+        "boundMax" : 0,
+        "fitnessFunc" : rainhasFitPermL,
+        "funcResultado" : resultRainhasPermL
     }
 }
  
