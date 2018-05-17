@@ -196,7 +196,10 @@ def rainhasFitPermL(cromossomo):
         for i in range(n):
             l = []
             for j in range(n):
-                l.append(c)
+                if i % 2 == 0:#impares
+                    l.append(math.sqrt(c))
+                else:#pares
+                    l.append(math.log(c))
                 c += 1
             lucros.append(l)
         maxLuc = 0
@@ -400,7 +403,7 @@ def resultRainhasPermL(cromossomo):
     print("Melhor solucao(coordenadas):", pos)
     print("Melhor solucao permutada:", cromossomo)
     print("Quantidade de colisoes:", int(conf))
-    print("Lucro obtido:", int(somaLucro))
+    print("Lucro obtido:", somaLucro)
 #------------------------------Dicionário de informações dos problemas------------------------------
 FuncFit = {
     "BitsAlternados" : {
