@@ -42,6 +42,10 @@ class AG():
         self.tipoSelecao = "roleta"
         self.txMut = 0.05#taxa de mutacao
         self.txCross = 0.8#taxa de crossover
+        self.escLinear = True
+        self.alfa = -1.0#escalonamento linear
+        self.beta = -1.0#escalonamento linear
+        self.c = 1.2#escalonamento linear
  
     def popFitness(self):
         s = "Individuos->Fitness:\n"
@@ -62,8 +66,33 @@ class AG():
         for i in self.individuos:
             totF += i.fit
         return totF
+
+    def geraAlfaBeta(self):
+        #encontra fmin, fmax e favg
+        fmin = self.individuos[0].fit
+        fmax = self.individuos[0].fit
+        favg = 0.0
+        for i in self.individuos:
+            if i.fit < fmin:
+                fmin = i.fit
+
+            if i.fit > fmax:
+                fmax = i.fit
+            favg += i.fit
+        favg /= len(self.individuos)
+
+        if fmin > (self.c*favg - fmax) / (self.c - 1):
+            self.alfa = (favg * (self.c-1)) / (fmax - favg)
+            self.beta = (favg * (fmax - self.c*favg)) / (fmax - favg)
+        else:
+            self.alfa = favg / (favg - fmin)
+            self.beta = (-fmin * favg) / (favg - fmin)
  
     def selecao(self):
+        #escalonamento linear
+        if self.escLinear:
+            self.geraAlfaBeta()
+
         #executa o tipo de selecao desejada
         if self.tipoSelecao == "roleta":
             #selecao por roleta
@@ -80,8 +109,12 @@ class AG():
  
         #chance de cada individuo de ser escolhido
         chances = []
-        for i in self.individuos:
-            chances += [i.fit/totF]
+        if self.escLinear:
+            for i in self.individuos:
+                chances += [(i.fit*self.alfa + self.beta)/totF]
+        else:
+             for i in self.individuos:
+                chances += [i.fit/totF]           
  
         #escolha dos individuos
         selecionados = []
@@ -111,8 +144,12 @@ class AG():
                 partTorn += [np.random.randint(len(self.individuos))]
             melhorTorn = partTorn[0]
             for j in partTorn:
-                if self.individuos[j].fit > self.individuos[melhorTorn].fit:
-                    melhorTorn = j
+                if self.escLinear:
+                    if (self.individuos[j].fit*self.alfa + self.beta) > (self.individuos[melhorTorn].fit*self.alfa + self.beta):
+                        melhorTorn = j
+                else:
+                    if self.individuos[j].fit > self.individuos[melhorTorn].fit:
+                        melhorTorn = j                    
             selecionados += [self.individuos[melhorTorn]]
         return selecionados
  
@@ -177,7 +214,10 @@ class AG():
  
             #print
             if ger%100 == 0:
-                print("---Geracao", ger, "---", "Melhor fitness: ", melhorGeral.fit)
+                if self.escLinear:
+                    print("---Geracao", ger, "--- C:", self.c,"--- Melhor fitness: ", melhorGeral.fit)
+                else:
+                    print("---Geracao", ger, "--- Melhor fitness: ", melhorGeral.fit)
  
             #selecao
             sel = self.selecao()
