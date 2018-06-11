@@ -247,7 +247,6 @@ def rainhasFitPermLPen(cromossomo):
         maxLuc = 0
         for i in range(n):
             maxLuc += lucros[i][n-1]#soma da diagonal principal
-        print(lucros)
  
     #calculo da primeira parte do fitness
     conf = 0
