@@ -8,9 +8,9 @@ tamPop = 30
 a = p.AG(FuncFit[problema], tamPop)
 
 #configurações
-a.maxGeracoes = 2000
+a.maxGeracoes = 10000
 a.elit = True
-a.escLinear = False
+a.escLinear = True
 a.tipoSelecao = "torneio"
 a.tamTorneio = 3
 #a.tipoCrossover = "pmx"

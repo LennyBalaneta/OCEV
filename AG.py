@@ -186,8 +186,19 @@ class AG():
         for i in self.individuos:
             soma += i.fit
         return soma/len(self.individuos)
- 
- 
+
+    def ajustaC(self, geracaoAtual):
+        #Geracoes [0, 1]
+        #0 -> 1.2
+        #0.8 -> 2
+        #1 -> 2
+        pctEv = geracaoAtual / self.maxGeracoes
+        if pctEv > 0.8:
+            self.c = 2.0
+        else:
+            self.c = 1.2 + pctEv
+
+
     def loopEvolucao(self):
         melhoresInd = []#melhores individuos por geracao
         melhoresIndF = []#melhores fitness por geracao
@@ -219,6 +230,10 @@ class AG():
                 else:
                     print("---Geracao", ger, "--- Melhor fitness: ", melhorGeral.fit)
  
+            #ajusta da constante c para o escalonamento linear
+            if self.escLinear:
+                self.ajustaC(ger)
+
             #selecao
             sel = self.selecao()
 
