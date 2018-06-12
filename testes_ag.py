@@ -2,19 +2,19 @@ import AG as p
 from FuncoesFitness import FuncFit
 
 problema = "rainhasPERMLPEN"
-tamPop = 30
-
+tamPop = 50
+'''
 #1 execucao
 a = p.AG(FuncFit[problema], tamPop)
 
 #configurações
-a.maxGeracoes = 10000
+a.maxGeracoes = 20000
 a.elit = True
-a.escLinear = True
+a.escLinear = False
 a.tipoSelecao = "torneio"
 a.tamTorneio = 3
-#a.tipoCrossover = "pmx"
-#a.tipoMutacao = "delta"
+a.tipoCrossover = "pmx"
+a.tipoMutacao = "swap"
 a.txMut = 0.05#taxa de mutacao
 a.txCross = 0.8#taxa de crossover
 
@@ -25,19 +25,20 @@ a.geraGraficos(r)
 '''
 
 #n execucoes
-execucoes = 5
+execucoes = 10
 resultados = []
 for i in range(execucoes):
     print("Execucao", (i+1))
     a = p.AG(FuncFit[problema], tamPop)
 
     #configurações
-    a.maxGeracoes = 1000
+    a.maxGeracoes = 5000
     a.elit = True
+    a.escLinear = False
     a.tipoSelecao = "torneio"
     a.tamTorneio = 3
-    #a.tipoCrossover = "pmx"
-    #a.tipoMutacao = "swap"
+    a.tipoCrossover = "pmx"
+    a.tipoMutacao = "swap"
     a.txMut = 0.05#taxa de mutacao
     a.txCross = 0.8#taxa de crossover
 
@@ -64,26 +65,3 @@ for j in range(len(somaBf)):
 rMedia = {"bF" : somaBf, "mF" : somaMf, "diver" : somaDiver}
 print("Melhor geral das", execucoes, "execucoes:", melhorGeral)
 a.geraGraficos(rMedia)
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
