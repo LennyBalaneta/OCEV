@@ -2,17 +2,17 @@ import AG as p
 from FuncoesFitness import FuncFit
 
 problema = "labirinto"
-tamPop = 50
+tamPop = 30
 
 #1 execucao
 a = p.AG(FuncFit[problema], tamPop)
 
 #configurações
-a.maxGeracoes = 2000
+a.maxGeracoes = 1000
 a.elit = True
 a.escLinear = False
 a.tipoSelecao = "torneio"
-a.tamTorneio = 3
+a.tamTorneio = 2
 #a.tipoCrossover = "pmx"
 #a.tipoMutacao = "swap"
 a.txMut = 0.05#taxa de mutacao

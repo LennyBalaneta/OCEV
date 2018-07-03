@@ -317,33 +317,60 @@ def labirintoFit(cromossomo):
     melhorDist = distMax
     fimX = 20
     fimY = 1
-    
-    for dir in cromossomo:
-        if dir == 0:
-            if labirintoBoard[atualY-1][atualX] != 0:
-                atualY -= 1
-        elif dir == 1:
-            if labirintoBoard[atualY][atualX+1] != 0:
-                atualX += 1
-        elif dir == 2:
-            if labirintoBoard[atualY+1][atualX] != 0:
-                atualY += 1
-        else:
-            if labirintoBoard[atualY][atualX-1] != 0:
-                atualX -= 1
-        distDest = abs(atualX - fimX) + abs(atualY - fimY)
-        if distDest < melhorDist:
-            melhorDist = distDest
-            melhorX = atualX
-            melhorY = atualY
-        if labirintoBoard[atualY][atualX] == 2:#saida
-            break
+    visitados = [[10, 1]]
+
+    for gene in cromossomo:
+        movimentos = movimentosPossiveis(atualX, atualY, visitados)
+        if len(movimentos) > 0:
+            dir = movimentos[gene % len(movimentos)]
+            if dir == 0:
+                if labirintoBoard[atualY-1][atualX] != 0:
+                    atualY -= 1
+                    visitados.append([atualY, atualX])
+            elif dir == 1:
+                if labirintoBoard[atualY][atualX+1] != 0:
+                    atualX += 1
+                    visitados.append([atualY, atualX])
+            elif dir == 2:
+                if labirintoBoard[atualY+1][atualX] != 0:
+                    atualY += 1
+                    visitados.append([atualY, atualX])
+            else:
+                if labirintoBoard[atualY][atualX-1] != 0:
+                    atualX -= 1
+                    visitados.append([atualY, atualX])
+            distDest = abs(atualX - fimX) + abs(atualY - fimY)
+            if distDest < melhorDist:
+                melhorDist = distDest
+                melhorX = atualX
+                melhorY = atualY
+            if labirintoBoard[atualY][atualX] == 2:#saida
+                break
         
     distDest = abs(melhorX - fimX) + abs(melhorY - fimY)
     fit = 1.0 - distDest/distMax
     
     return fit
  
+def movimentosPossiveis(x, y, visitados):
+    movs = []
+    #cima
+    if labirintoBoard[y-1][x] != 0 :
+        if [y-1, x] not in visitados:
+            movs.append(0)
+    #direita
+    if labirintoBoard[y][x+1] != 0 :
+        if [y, x+1] not in visitados:
+            movs.append(1)
+    #baixo
+    if labirintoBoard[y+1][x] != 0 :
+        if [y+1, x] not in visitados:
+            movs.append(2)
+    #esquerda
+    if labirintoBoard[y][x-1] != 0 :
+        if [y, x-1] not in visitados:
+            movs.append(3)
+    return movs
 #------------------------------Funcoes para mostrar resultado------------------------------
 def resultBitsAlt(cromossomo):
     '''Funcao de resultado para problema dos bits alternados'''
@@ -567,34 +594,43 @@ def resultLabirinto(cromossomo):
     melhorDist = distMax
     fimX = 20
     fimY = 1
-    
-    for dir in cromossomo:
-        if dir == 0:
-            if labirintoBoard[atualY-1][atualX] != 0:
-                atualY -= 1
-        elif dir == 1:
-            if labirintoBoard[atualY][atualX+1] != 0:
-                atualX += 1
-        elif dir == 2:
-            if labirintoBoard[atualY+1][atualX] != 0:
-                atualY += 1
-        else:
-            if labirintoBoard[atualY][atualX-1] != 0:
-                atualX -= 1
-        distDest = abs(atualX - fimX) + abs(atualY - fimY)
-        if distDest < melhorDist:
-            melhorDist = distDest
-            melhorX = atualX
-            melhorY = atualY
-        if labirintoBoard[atualY][atualX] == 2:#saida
-            break
+    visitados = [[10, 1]]
+
+    for gene in cromossomo:
+        movimentos = movimentosPossiveis(atualX, atualY, visitados)
+        if len(movimentos) > 0:
+            dir = movimentos[gene % len(movimentos)]
+            if dir == 0:
+                if labirintoBoard[atualY-1][atualX] != 0:
+                    atualY -= 1
+                    visitados.append([atualY, atualX])
+            elif dir == 1:
+                if labirintoBoard[atualY][atualX+1] != 0:
+                    atualX += 1
+                    visitados.append([atualY, atualX])
+            elif dir == 2:
+                if labirintoBoard[atualY+1][atualX] != 0:
+                    atualY += 1
+                    visitados.append([atualY, atualX])
+            else:
+                if labirintoBoard[atualY][atualX-1] != 0:
+                    atualX -= 1
+                    visitados.append([atualY, atualX])
+            distDest = abs(atualX - fimX) + abs(atualY - fimY)
+            if distDest < melhorDist:
+                melhorDist = distDest
+                melhorX = atualX
+                melhorY = atualY
+            if labirintoBoard[atualY][atualX] == 2:#saida
+                break
         
     distDest = abs(melhorX - fimX) + abs(melhorY - fimY)
     fit = 1.0 - distDest/distMax
 
-    print("Melhor valor de f:", labirintoFit(cromossomo))
-    print("Valores finais: x=", atualX, " | y=", atualY)
+    print("Melhor valor de f:", fit)
+    print("Valores finais: x=", melhorX, " | y=", melhorY)
     print("Distancia da saida:", distDest)
+    print("Nos visitados:", visitados)
     print("Melhor solucao:", cromossomo)
 #------------------------------Dicionário de informações dos problemas------------------------------
 FuncFit = {
@@ -734,7 +770,7 @@ FuncFit = {
         "codificacao" : "INT",
         "tamCrom" : 100,#qtd de rainhas
         "boundMin" : 0,
-        "boundMax" : 4,
+        "boundMax" : 12,
         "fitnessFunc" : labirintoFit,
         "funcResultado" : resultLabirinto
     }
