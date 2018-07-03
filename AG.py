@@ -224,7 +224,7 @@ class AG():
             ger += 1
  
             #print
-            if ger%100000 == 0:
+            if ger%100 == 0:
                 if self.escLinear:
                     print("---Geracao", ger, "--- C:", self.c,"--- Melhor fitness: ", melhorGeral.fit)
                 else:

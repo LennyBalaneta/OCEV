@@ -267,6 +267,82 @@ def rainhasFitPermLPen(cromossomo):
     fo = max(0, fit - h)
  
     return fo
+
+def labirintoFit(cromossomo):
+    global labirintoBoard
+    if not "labirintoBoard" in globals():
+        labirintoBoard = [
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                    [0,0,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,2,1,1,0,0],
+                    [0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,0,0,0,0,0,0,0,1,1,0],
+                    [0,1,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,1,0,0],
+                    [0,1,1,1,1,1,1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,1,0],
+                    [0,1,0,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,1,0],
+                    [0,1,0,0,0,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,0,1,1,0],
+                    [0,1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,1,0],
+                    [0,1,1,1,1,1,1,1,0,1,1,0,1,1,1,0,1,0,1,0,1,0,1,1,0],
+                    [0,0,0,0,0,0,1,1,0,1,1,0,1,1,1,0,1,0,1,0,1,0,0,1,0],
+                    [0,3,1,1,1,0,1,0,0,1,1,0,1,0,0,0,1,0,1,0,1,0,1,1,0],
+                    [0,1,0,0,1,0,1,0,0,1,1,0,1,0,0,0,1,0,1,0,1,1,1,1,0],
+                    [0,1,0,0,1,0,1,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,1,0],
+                    [0,1,0,0,1,0,1,1,0,1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,0],
+                    [0,1,0,0,1,0,1,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,1,0],
+                    [0,1,1,0,1,0,0,1,1,1,0,0,0,0,0,1,1,1,1,0,1,0,0,1,0],
+                    [0,1,1,0,1,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,1,0,1,1,0],
+                    [0,0,1,0,1,0,1,1,0,0,0,0,0,0,0,1,1,1,1,0,1,0,1,0,0],
+                    [0,1,1,0,0,0,1,1,0,1,1,1,1,0,0,0,0,0,1,0,1,1,1,1,0],
+                    [0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,0,1,0,0,1,0],
+                    [0,0,0,0,1,0,0,0,0,1,1,0,1,1,1,0,1,0,1,0,1,1,0,1,0],
+                    [0,1,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1,0,0,1,0,1,0],
+                    [0,1,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,1,0,1,0],
+                    [0,1,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,0,0,1,0],
+                    [0,1,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,0,1,1,0,1,0],
+                    [0,1,1,0,1,0,1,0,0,0,1,0,1,0,1,0,1,0,0,0,0,1,0,1,0],
+                    [0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,0,1,0,0,1,1,1,1,1,0],
+                    [0,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,1,0,0],
+                    [0,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                ]
+    #dir:
+    #0 -> cima
+    #1 -> direita
+    #2 -> baixo
+    #3 -> esquerda
+    
+    distMax = abs(0 - 24) + abs(0 - 29)
+    atualX = 1
+    atualY = 10
+    melhorX = 1
+    melhorY = 1
+    melhorDist = distMax
+    fimX = 20
+    fimY = 1
+    
+    for dir in cromossomo:
+        if dir == 0:
+            if labirintoBoard[atualY-1][atualX] != 0:
+                atualY -= 1
+        elif dir == 1:
+            if labirintoBoard[atualY][atualX+1] != 0:
+                atualX += 1
+        elif dir == 2:
+            if labirintoBoard[atualY+1][atualX] != 0:
+                atualY += 1
+        else:
+            if labirintoBoard[atualY][atualX-1] != 0:
+                atualX -= 1
+        distDest = abs(atualX - fimX) + abs(atualY - fimY)
+        if distDest < melhorDist:
+            melhorDist = distDest
+            melhorX = atualX
+            melhorY = atualY
+        if labirintoBoard[atualY][atualX] == 2:#saida
+            break
+        
+    distDest = abs(melhorX - fimX) + abs(melhorY - fimY)
+    fit = 1.0 - distDest/distMax
+    
+    return fit
  
 #------------------------------Funcoes para mostrar resultado------------------------------
 def resultBitsAlt(cromossomo):
@@ -417,6 +493,7 @@ def resultRainhasPerm2(cromossomo):
     print("Melhor solucao(coordenadas):", pos)
     print("Melhor solucao permutada:", cromossomo)
     print("Quantidade de rainhas posicionadas:", int(qtd))
+
  
 def resultRainhasPermL(cromossomo):
     n = len(cromossomo)
@@ -480,6 +557,45 @@ def resultRainhasPermLPen(cromossomo):
     print("Melhor solucao permutada:", cromossomo)
     print("Quantidade de colisoes:", int(conf))
     print("Lucro obtido:", somaLucro)
+
+def resultLabirinto(cromossomo):
+    distMax = abs(0 - 24) + abs(0 - 29)
+    atualX = 1
+    atualY = 10
+    melhorX = 1
+    melhorY = 1
+    melhorDist = distMax
+    fimX = 20
+    fimY = 1
+    
+    for dir in cromossomo:
+        if dir == 0:
+            if labirintoBoard[atualY-1][atualX] != 0:
+                atualY -= 1
+        elif dir == 1:
+            if labirintoBoard[atualY][atualX+1] != 0:
+                atualX += 1
+        elif dir == 2:
+            if labirintoBoard[atualY+1][atualX] != 0:
+                atualY += 1
+        else:
+            if labirintoBoard[atualY][atualX-1] != 0:
+                atualX -= 1
+        distDest = abs(atualX - fimX) + abs(atualY - fimY)
+        if distDest < melhorDist:
+            melhorDist = distDest
+            melhorX = atualX
+            melhorY = atualY
+        if labirintoBoard[atualY][atualX] == 2:#saida
+            break
+        
+    distDest = abs(melhorX - fimX) + abs(melhorY - fimY)
+    fit = 1.0 - distDest/distMax
+
+    print("Melhor valor de f:", labirintoFit(cromossomo))
+    print("Valores finais: x=", atualX, " | y=", atualY)
+    print("Distancia da saida:", distDest)
+    print("Melhor solucao:", cromossomo)
 #------------------------------Dicionário de informações dos problemas------------------------------
 FuncFit = {
     "BitsAlternados" : {
@@ -604,13 +720,23 @@ FuncFit = {
     },
     "rainhasPERMLPEN" : {
         "nome" : "Rainhas PERM com lucro com penalidades",
-        "descricao" : "Problema das rainhas com codificacao permutada com lucro co penalidades",
+        "descricao" : "Problema das rainhas com codificacao permutada com lucro com penalidades",
         "codificacao" : "INT-PERM",
         "tamCrom" : 8,#qtd de rainhas
         "boundMin" : 0,
         "boundMax" : 0,
         "fitnessFunc" : rainhasFitPermLPen,
         "funcResultado" : resultRainhasPermLPen
+    },
+    "labirinto" : {
+        "nome" : "Navegacao no labirinto",
+        "descricao" : "Problema da navegacao no labirinto",
+        "codificacao" : "INT",
+        "tamCrom" : 100,#qtd de rainhas
+        "boundMin" : 0,
+        "boundMax" : 4,
+        "fitnessFunc" : labirintoFit,
+        "funcResultado" : resultLabirinto
     }
 }
  
