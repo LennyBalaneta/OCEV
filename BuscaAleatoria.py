@@ -43,7 +43,6 @@ def geraGraficos(result):
         ax.set_xlabel("Iteração")
         ax.set_ylabel("Fitness")
         ax.set_title("Fitness por iteração")
-        ax.plot(result["bF"], label="Melhor", lw=1, ls="--")
         ax.plot(result["mF"], label="Fitness da iteração", lw=1, ls="-")
         ax.legend(loc="upper left")
  
@@ -52,12 +51,12 @@ def geraGraficos(result):
 
 #n execucoes
 execucoes = 10
-qtdGer = 25000
+qtdGer = 3000
 resultados = []
 for i in range(execucoes):
     print("Execucao", (i+1))
     
-    resultados.append(buscaAleatoria(FuncFit["rainhasPERMLPEN"], qtdGer))
+    resultados.append(buscaAleatoria(FuncFit["labirinto"], qtdGer))
 
 somaBf = [0.0]*qtdGer
 somaMf = [0.0]*qtdGer

@@ -630,6 +630,7 @@ def resultLabirinto(cromossomo):
     print("Melhor valor de f:", fit)
     print("Valores finais: x=", melhorX, " | y=", melhorY)
     print("Distancia da saida:", distDest)
+    print("Quantidade de movimentos executados:", len(visitados))
     print("Nos visitados:", visitados)
     print("Melhor solucao:", cromossomo)
 #------------------------------Dicionário de informações dos problemas------------------------------

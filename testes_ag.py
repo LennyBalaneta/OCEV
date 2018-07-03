@@ -3,7 +3,7 @@ from FuncoesFitness import FuncFit
 
 problema = "labirinto"
 tamPop = 30
-
+'''
 #1 execucao
 a = p.AG(FuncFit[problema], tamPop)
 
@@ -12,7 +12,7 @@ a.maxGeracoes = 1000
 a.elit = True
 a.escLinear = False
 a.tipoSelecao = "torneio"
-a.tamTorneio = 2
+a.tamTorneio = 3
 #a.tipoCrossover = "pmx"
 #a.tipoMutacao = "swap"
 a.txMut = 0.05#taxa de mutacao
@@ -32,13 +32,13 @@ for i in range(execucoes):
     a = p.AG(FuncFit[problema], tamPop)
 
     #configurações
-    a.maxGeracoes = 5000
+    a.maxGeracoes = 1000
     a.elit = True
     a.escLinear = False
     a.tipoSelecao = "torneio"
     a.tamTorneio = 3
-    a.tipoCrossover = "pmx"
-    a.tipoMutacao = "swap"
+    #a.tipoCrossover = "pmx"
+    #a.tipoMutacao = "swap"
     a.txMut = 0.05#taxa de mutacao
     a.txCross = 0.8#taxa de crossover
 
@@ -65,4 +65,3 @@ for j in range(len(somaBf)):
 rMedia = {"bF" : somaBf, "mF" : somaMf, "diver" : somaDiver}
 print("Melhor geral das", execucoes, "execucoes:", melhorGeral)
 a.geraGraficos(rMedia)
-'''
